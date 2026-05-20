@@ -522,32 +522,22 @@
 
       <div class="congrats-icon">🎉</div>
 
-      <div class="congrats-tag">✓ Eligibility Confirmed</div>
-
       <div class="congrats-headline">
-        <span class="g">CONGRATS!</span><br>
-        <span class="w">YOU QUALIFY TO</span><br>
-        <span class="g">CANCEL</span><br>
-        <span class="w">YOUR CONTRACT</span>
+        <span class="g">CONGRATULATIONS!</span>
+      </div>
+
+      <div style="font-family:'Barlow',sans-serif;font-size:18px;font-weight:600;color:white;line-height:1.4;margin:12px 0 24px;text-align:center;">
+        People in <span style="color:var(--orange);" id="stateNameFinal2"></span> are getting out of their solar contracts — and you can too.
       </div>
 
       <div class="qualify-box">
-        <div class="q-title">Based on your answers, you may qualify for:</div>
         <div class="qualify-item">
           <span class="check">✔</span>
-          <span>Full contract cancellation — no early exit penalties</span>
+          <span>Cancel your contract and stop paying for something you regret</span>
         </div>
         <div class="qualify-item">
           <span class="check">✔</span>
-          <span>Recovery of overpaid monthly fees</span>
-        </div>
-        <div class="qualify-item">
-          <span class="check">✔</span>
-          <span>Free case review by our specialist team in <span id="stateNameFinal" style="color:var(--orange);font-weight:700;"></span></span>
-        </div>
-        <div class="qualify-item">
-          <span class="check">✔</span>
-          <span>No lawyers needed — no upfront cost</span>
+          <span>Our team has helped homeowners in <span style="color:var(--orange);font-weight:700;" id="stateNameFinal"></span> walk away for good</span>
         </div>
       </div>
 
@@ -666,6 +656,7 @@
 
       // Update state names in step3 fallback
       document.getElementById('stateNameFinal').textContent = userState;
+      document.getElementById('stateNameFinal2').textContent = userState;
       document.getElementById('stateNameUrgency').textContent = userState;
 
       goToStep(3);
