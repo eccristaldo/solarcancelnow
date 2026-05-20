@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar Cancel Now</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0a1628;
+    --navy2: #0d1f3c;
+    --orange: #f59e0b;
+    --orange2: #d97706;
+    --orange-bright: #fb923c;
+    --white: #ffffff;
+    --gray-light: #e5e7eb;
+    --gray-muted: #9ca3af;
+    --danger-red: #ef4444;
+    --green: #22c55e;
+  }
+
+  html, body {
+    min-height: 100vh;
+    font-family: 'Barlow', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* BG panels */
+  .bg-panels {
+    position: fixed;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(10,22,40,0.82) 0%, rgba(10,22,40,0.92) 100%),
+      url('https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1600&q=80') center/cover no-repeat;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* LOGO BAR */
+  .logo-bar {
+    width: 100%;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid rgba(245,158,11,0.2);
+    background: rgba(10,22,40,0.7);
+    backdrop-filter: blur(6px);
+  }
+  .logo {
+    background: white;
+    border-radius: 6px;
+    padding: 6px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+  .logo span:first-child {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    color: var(--orange);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .logo span:last-child {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    color: #444;
+    text-transform: uppercase;
+  }
+
+  /* URGENCY BAR */
+  .urgency-bar {
+    width: 100%;
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.4);
+    padding: 9px 20px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fca5a5;
+    letter-spacing: 0.5px;
+  }
+  .urgency-bar .dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: #ef4444;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: blink 1s infinite;
+    vertical-align: middle;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  /* MAIN CONTENT */
+  .content {
+    width: 100%;
+    max-width: 700px;
+    padding: 36px 24px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    width: 100%;
+    margin-bottom: 32px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .progress-track {
+    width: 100%;
+    height: 5px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange), var(--orange-bright));
+    border-radius: 99px;
+    transition: width 0.5s ease;
+  }
+
+  /* QUIZ CARD */
+  .quiz-card {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 16px;
+    padding: 40px 36px;
+    backdrop-filter: blur(8px);
+    animation: fadeUp 0.4s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(18px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* STEP LABEL */
+  .step-label {
+    display: inline-block;
+    background: rgba(245,158,11,0.15);
+    border: 1px solid rgba(245,158,11,0.4);
+    color: var(--orange);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 99px;
+    margin-bottom: 20px;
+  }
+
+  /* HEADLINES */
+  .state-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--orange);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .state-name {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 900;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px;
+  }
+  .quiz-headline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(28px, 5vw, 42px);
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .quiz-headline .accent { color: var(--orange); }
+
+  .quiz-sub {
+    font-size: 15px;
+    color: var(--gray-muted);
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+
+  /* ANSWER OPTIONS */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  .option-btn {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 16px 22px;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.18s ease;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .option-btn:hover {
+    background: rgba(245,158,11,0.12);
+    border-color: var(--orange);
+    transform: translateX(3px);
+  }
+  .option-btn.selected {
+    background: rgba(245,158,11,0.18);
+    border-color: var(--orange);
+  }
+  .option-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(245,158,11,0.12);
+    border: 1.5px solid rgba(245,158,11,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--orange);
+    flex-shrink: 0;
+  }
+
+  /* CONGRATS SCREEN */
+  .congrats-icon {
+    width: 80px; height: 80px;
+    background: rgba(34,197,94,0.15);
+    border: 2px solid rgba(34,197,94,0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 38px;
+    animation: pop 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+  @keyframes pop {
+    0%   { transform: scale(0.5); opacity:0; }
+    70%  { transform: scale(1.1); }
+    100% { transform: scale(1); opacity:1; }
+  }
+  .congrats-tag {
+    display: inline-block;
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.4);
+    color: #86efac;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 99px;
+    margin-bottom: 18px;
+  }
+  .congrats-headline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(32px, 6vw, 52px);
+    line-height: 1.0;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .congrats-headline .g { color: #22c55e; }
+  .congrats-headline .w { color: white; }
+
+  .qualify-box {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 20px 0 28px;
+    text-align: left;
+  }
+  .qualify-box .q-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+  }
+  .qualify-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.4;
+  }
+  .qualify-item .check {
+    color: #22c55e;
+    font-size: 17px;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  /* CTA BUTTON */
+  .cta-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--orange), var(--orange2));
+    border: none;
+    border-radius: 10px;
+    padding: 20px 32px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.18s ease;
+    box-shadow: 0 4px 24px rgba(245,158,11,0.35);
+    text-decoration: none;
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(245,158,11,0.5);
+    background: linear-gradient(135deg, #fbbf24, var(--orange));
+  }
+  .cta-btn:active { transform: translateY(0); }
+  .arrow { font-size: 26px; }
+
+  .cta-footnote {
+    text-align: center;
+    font-size: 12px;
+    color: var(--gray-muted);
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* TRUST STRIP */
+  .trust-strip {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-muted);
+    letter-spacing: 0.3px;
+  }
+  .trust-item .ti { color: var(--orange); font-size: 15px; }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+    line-height: 1.6;
+    max-width: 560px;
+  }
+
+  @media (max-width: 480px) {
+    .quiz-card { padding: 28px 20px; }
+    .trust-strip { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-panels"></div>
+
+<div class="wrapper">
+  <!-- LOGO -->
+  <div class="logo-bar">
+    <div class="logo">
+      <span>Solar</span>
+      <span>Cancel Now</span>
+    </div>
+  </div>
+
+  <!-- URGENCY BAR -->
+  <div class="urgency-bar">
+    <span class="dot"></span>
+    ⚠️ Cases close tonight at 8PM — slots are limited
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-label">
+        <span id="progressText">Step 1 of 3</span>
+        <span id="progressPct">33%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:33%"></div>
+      </div>
+    </div>
+
+    <!-- ============ STEP 1 ============ -->
+    <div class="quiz-card" id="step1">
+      <div class="step-label">Quick Check — Free</div>
+
+      <div class="state-eyebrow" id="stateEyebrow">Loading your state...</div>
+
+      <div class="quiz-headline">
+        <span id="stateName" class="accent">YOUR STATE</span><br>
+        HOMEOWNERS ARE<br>
+        <span class="accent">CANCELING</span> THEIR<br>
+        SOLAR CONTRACTS
+      </div>
+      <div class="quiz-sub">
+        Answer 2 quick questions to find out if you qualify — takes less than 30 seconds.
+      </div>
+
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;color:white;margin-bottom:20px;letter-spacing:0.5px;line-height:1.2;">
+        Do you feel your solar company<br>was honest with you?
+      </div>
+
+      <div class="options">
+        <button class="option-btn" onclick="selectStep1('Yes')">
+          <div class="option-icon">😊</div>
+          <span>Yes — they were upfront about everything</span>
+        </button>
+        <button class="option-btn" onclick="selectStep1('No')">
+          <div class="option-icon">😤</div>
+          <span>No — I feel I was misled</span>
+        </button>
+        <button class="option-btn" onclick="selectStep1('Not sure')">
+          <div class="option-icon">🤔</div>
+          <span>I'm not sure — something felt off</span>
+        </button>
+      </div>
+
+      <div class="trust-strip" style="margin-top:24px;">
+        <div class="trust-item"><span class="ti">🔒</span> Free to check</div>
+        <div class="trust-item"><span class="ti">⚡</span> Takes 30 seconds</div>
+        <div class="trust-item"><span class="ti">🚫</span> No lawyers needed</div>
+      </div>
+    </div>
+
+    <!-- ============ STEP 2 ============ -->
+    <div class="quiz-card" id="step2" style="display:none;">
+      <div class="step-label">Almost There</div>
+
+      <div class="quiz-headline">
+        Where do you <span class="accent">live?</span>
+      </div>
+      <div class="quiz-sub">
+        This helps us confirm your property type qualifies for contract cancellation review.
+      </div>
+
+      <div class="options">
+        <button class="option-btn" onclick="selectStep2('House')">
+          <div class="option-icon">🏠</div>
+          <span>House</span>
+        </button>
+        <button class="option-btn" onclick="selectStep2('Apartment')">
+          <div class="option-icon">🏢</div>
+          <span>Apartment</span>
+        </button>
+        <button class="option-btn" onclick="selectStep2('Mobile Home')">
+          <div class="option-icon">🚐</div>
+          <span>Mobile Home</span>
+        </button>
+      </div>
+
+      <div class="trust-strip" style="margin-top:24px;">
+        <div class="trust-item"><span class="ti">🔒</span> 100% Confidential</div>
+        <div class="trust-item"><span class="ti">✅</span> No obligation</div>
+        <div class="trust-item"><span class="ti">📋</span> Expert review</div>
+      </div>
+    </div>
+
+    <!-- ============ STEP 3 — CONGRATS ============ -->
+    <div class="quiz-card" id="step3" style="display:none; text-align:center;">
+
+      <div class="congrats-icon">🎉</div>
+
+      <div class="congrats-tag">✓ Eligibility Confirmed</div>
+
+      <div class="congrats-headline">
+        <span class="g">CONGRATS!</span><br>
+        <span class="w">YOU QUALIFY TO</span><br>
+        <span class="g">CANCEL</span><br>
+        <span class="w">YOUR CONTRACT</span>
+      </div>
+
+      <div class="qualify-box">
+        <div class="q-title">Based on your answers, you may qualify for:</div>
+        <div class="qualify-item">
+          <span class="check">✔</span>
+          <span>Full contract cancellation — no early exit penalties</span>
+        </div>
+        <div class="qualify-item">
+          <span class="check">✔</span>
+          <span>Recovery of overpaid monthly fees</span>
+        </div>
+        <div class="qualify-item">
+          <span class="check">✔</span>
+          <span>Free case review by our specialist team in <span id="stateNameFinal" style="color:var(--orange);font-weight:700;"></span></span>
+        </div>
+        <div class="qualify-item">
+          <span class="check">✔</span>
+          <span>No lawyers needed — no upfront cost</span>
+        </div>
+      </div>
+
+      <a href="https://solarreliefcenter.com" class="cta-btn" target="_blank">
+        CLAIM MY FREE CASE REVIEW <span class="arrow">→</span>
+      </a>
+
+      <div class="cta-footnote">
+        🔒 Free to check. No lawyers needed. No penalties.
+      </div>
+
+      <div style="margin-top:20px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:8px; padding:12px 16px; font-size:13px; color:#fca5a5; font-weight:600;">
+        ⚠️ Only <span id="spotsLeft">7</span> spots remaining in <span id="stateNameUrgency"></span> today
+      </div>
+
+      <div class="trust-strip" style="margin-top:24px;">
+        <div class="trust-item"><span class="ti">🔒</span> SSL Secure</div>
+        <div class="trust-item"><span class="ti">⭐</span> 4.9/5 Rating</div>
+        <div class="trust-item"><span class="ti">👨‍⚖️</span> Expert Reviewed</div>
+        <div class="trust-item"><span class="ti">🚫</span> Zero Cost</div>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer">
+      This is not legal advice. Results may vary. Solar Relief Center connects homeowners with qualified professionals for contract review. Free to check eligibility.
+    </div>
+  </div>
+</div>
+
+<script>
+  let userState = 'YOUR STATE';
+  let step1Answer = '';
+  let step2Answer = '';
+
+  // Fake spots counter
+  const spots = Math.floor(Math.random() * 5) + 5;
+  document.getElementById('spotsLeft').textContent = spots;
+
+  // GeoIP
+  fetch('https://ipapi.co/json/')
+    .then(r => r.json())
+    .then(data => {
+      if (data && data.region) {
+        userState = data.region.toUpperCase();
+        document.getElementById('stateEyebrow').textContent = '📍 ' + userState + ' HOMEOWNERS ALERT';
+        document.getElementById('stateName').textContent = userState;
+        document.getElementById('stateNameFinal').textContent = userState;
+        document.getElementById('stateNameUrgency').textContent = userState;
+      }
+    })
+    .catch(() => {
+      document.getElementById('stateEyebrow').textContent = '📍 YOUR STATE HOMEOWNERS ALERT';
+      document.getElementById('stateName').textContent = 'YOUR STATE';
+    });
+
+  function setProgress(pct, label) {
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = label;
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  function goToStep(n) {
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step3').style.display = 'none';
+
+    const el = document.getElementById('step' + n);
+    el.style.display = '';
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = '';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function selectStep1(answer) {
+    step1Answer = answer;
+    // Brief visual feedback
+    const btns = document.querySelectorAll('#step1 .option-btn');
+    btns.forEach(b => {
+      if (b.textContent.includes(answer)) b.classList.add('selected');
+    });
+    setTimeout(() => {
+      setProgress(66, 'Step 2 of 3');
+      goToStep(2);
+    }, 320);
+  }
+
+  function selectStep2(answer) {
+    step2Answer = answer;
+    const btns = document.querySelectorAll('#step2 .option-btn');
+    btns.forEach(b => {
+      if (b.textContent.includes(answer)) b.classList.add('selected');
+    });
+
+    // Show loading state
+    document.getElementById('progressWrap').style.display = 'none';
+
+    const card = document.getElementById('step2');
+    card.innerHTML = `
+      <div style="text-align:center; padding:40px 0;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:var(--orange);margin-bottom:16px;letter-spacing:1px;">REVIEWING YOUR ELIGIBILITY...</div>
+        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:12px;">
+          <div class="dot-loader" style="width:12px;height:12px;border-radius:50%;background:var(--orange);animation:blink 0.8s 0s infinite;"></div>
+          <div class="dot-loader" style="width:12px;height:12px;border-radius:50%;background:var(--orange);animation:blink 0.8s 0.2s infinite;"></div>
+          <div class="dot-loader" style="width:12px;height:12px;border-radius:50%;background:var(--orange);animation:blink 0.8s 0.4s infinite;"></div>
+        </div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.4);">Checking your state's cancellation laws...</div>
+      </div>
+    `;
+
+    setTimeout(() => {
+      document.getElementById('progressWrap').style.display = '';
+      setProgress(100, 'Step 3 of 3');
+
+      // Update state names in step3 fallback
+      document.getElementById('stateNameFinal').textContent = userState;
+      document.getElementById('stateNameUrgency').textContent = userState;
+
+      goToStep(3);
+    }, 2000);
+  }
+</script>
+</body>
+</html>

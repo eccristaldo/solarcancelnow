@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar Cancel Now — Understand Your Solar Contract Rights</title>
+<meta name="description" content="Solar Cancel Now helps homeowners understand their rights when it comes to solar contracts. Learn what options may be available to you.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #ffffff;
+  --off-white: #f8f7f4;
+  --light: #f0ede8;
+  --border: #e2ddd6;
+  --text: #1a1a1a;
+  --text-mid: #4a4a4a;
+  --text-muted: #888880;
+  --navy: #1c2b45;
+  --navy-light: #2e4166;
+  --amber: #b45309;
+  --amber-bg: #fef3c7;
+  --amber-light: #fffbeb;
+  --green: #166534;
+  --green-bg: #dcfce7;
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--white);
+}
+
+/* NAV */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.nav-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.logo-icon {
+  width: 34px; height: 34px;
+  background: var(--navy);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.logo-text {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--navy);
+  line-height: 1;
+}
+.logo-text span {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-top: 1px;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--navy); }
+.nav-cta {
+  background: var(--navy);
+  color: white !important;
+  padding: 9px 20px;
+  border-radius: var(--radius);
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  transition: background 0.15s !important;
+}
+.nav-cta:hover { background: var(--navy-light) !important; color: white !important; }
+
+/* HERO */
+.hero {
+  background: var(--off-white);
+  padding: 80px 24px 72px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.hero-inner { max-width: 680px; margin: 0 auto; }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--amber-bg);
+  border: 1px solid #fde68a;
+  color: var(--amber);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 5px 14px;
+  border-radius: 99px;
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.15;
+  color: var(--navy);
+  margin-bottom: 20px;
+  font-weight: 400;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--amber);
+}
+.hero p {
+  font-size: 18px;
+  color: var(--text-mid);
+  max-width: 540px;
+  margin: 0 auto 36px;
+  line-height: 1.65;
+}
+.hero-cta {
+  display: inline-block;
+  background: var(--navy);
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 16px 36px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: background 0.15s, transform 0.15s;
+}
+.hero-cta:hover {
+  background: var(--navy-light);
+  transform: translateY(-1px);
+}
+.hero-note {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* TRUST BAR */
+.trust-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 24px;
+}
+.trust-bar-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 28px 40px;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-mid);
+}
+.trust-item .icon { font-size: 16px; }
+
+/* SECTION BASE */
+section { padding: 72px 24px; }
+.section-inner { max-width: 1040px; margin: 0 auto; }
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(26px, 4vw, 40px);
+  color: var(--navy);
+  line-height: 1.2;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+.section-sub {
+  font-size: 17px;
+  color: var(--text-mid);
+  max-width: 560px;
+  line-height: 1.65;
+  margin-bottom: 48px;
+}
+
+/* WHAT IS THIS */
+.what-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+.what-card {
+  background: var(--off-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 26px;
+}
+.what-card .icon {
+  font-size: 28px;
+  margin-bottom: 14px;
+  display: block;
+}
+.what-card h3 {
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.what-card p {
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+
+/* HOW IT WORKS */
+.how-section { background: var(--navy); }
+.how-section .section-label { color: #93c5fd; }
+.how-section .section-title { color: white; }
+.how-section .section-sub { color: rgba(255,255,255,0.6); }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.step-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  position: relative;
+}
+.step-num {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 16px;
+}
+.step-card h3 {
+  font-weight: 600;
+  font-size: 17px;
+  color: white;
+  margin-bottom: 8px;
+}
+.step-card p {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.65;
+}
+
+/* FAQ */
+.faq-section { background: var(--off-white); }
+.faq-list { max-width: 680px; }
+.faq-item {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.faq-q {
+  width: 100%;
+  text-align: left;
+  padding: 18px 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+  gap: 16px;
+}
+.faq-q:hover { color: var(--navy-light); }
+.faq-chevron {
+  flex-shrink: 0;
+  font-size: 18px;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+  line-height: 1;
+}
+.faq-item.open .faq-chevron { transform: rotate(180deg); }
+.faq-a {
+  display: none;
+  padding: 0 22px 18px;
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  border-top: 1px solid var(--border);
+}
+.faq-item.open .faq-a { display: block; }
+
+/* CTA BAND */
+.cta-band {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  text-align: center;
+  padding: 72px 24px;
+}
+.cta-band h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(26px, 4vw, 42px);
+  color: white;
+  font-weight: 400;
+  margin-bottom: 14px;
+  line-height: 1.2;
+}
+.cta-band p {
+  font-size: 17px;
+  color: rgba(255,255,255,0.6);
+  max-width: 500px;
+  margin: 0 auto 32px;
+}
+.cta-band a {
+  display: inline-block;
+  background: white;
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 16px;
+  padding: 16px 40px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.cta-band a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.cta-band .footnote {
+  margin-top: 16px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+}
+
+/* FOOTER */
+footer {
+  background: var(--off-white);
+  border-top: 1px solid var(--border);
+  padding: 36px 24px;
+}
+.footer-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.footer-brand .logo-text { font-size: 16px; }
+.footer-brand p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  max-width: 260px;
+  line-height: 1.6;
+}
+.footer-links {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.footer-col h4 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.footer-col a {
+  display: block;
+  font-size: 14px;
+  color: var(--text-mid);
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: color 0.15s;
+}
+.footer-col a:hover { color: var(--navy); }
+.footer-bottom {
+  max-width: 1040px;
+  margin: 28px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  line-height: 1.7;
+}
+
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .footer-inner { flex-direction: column; }
+  .footer-links { gap: 28px; }
+  .footer-bottom { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">☀️</div>
+      <div class="logo-text">
+        Solar Cancel Now
+        <span>solarcancelnow.com</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#check" class="nav-cta">Check My Eligibility</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      ☀️ Free Eligibility Check — No Lawyers Needed
+    </div>
+    <h1>Did Your Solar Company<br><em>Tell You the Whole Story?</em></h1>
+    <p>
+      Many homeowners who signed solar contracts were not given complete information at the time of sale. We help you understand what options may be available to you.
+    </p>
+    <a href="solar-quiz.html" class="hero-cta" id="check">Check My Eligibility — Free</a>
+    <div class="hero-note">
+      🔒 No cost. No obligation. Takes less than 30 seconds.
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-bar-inner">
+    <div class="trust-item"><span class="icon">✅</span> Free to check</div>
+    <div class="trust-item"><span class="icon">🔒</span> Your info is private</div>
+    <div class="trust-item"><span class="icon">⚖️</span> No lawyers required</div>
+    <div class="trust-item"><span class="icon">🏠</span> For homeowners</div>
+    <div class="trust-item"><span class="icon">📋</span> Expert review team</div>
+  </div>
+</div>
+
+<!-- WHAT IS THIS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">About Solar Cancel Now</div>
+    <h2 class="section-title">We help homeowners understand their solar contract rights</h2>
+    <p class="section-sub">
+      Solar contracts can be complicated. Many homeowners feel they weren't given accurate information when they signed. Our team helps you find out what your options are.
+    </p>
+    <div class="what-grid">
+      <div class="what-card">
+        <span class="icon">📄</span>
+        <h3>Contract review</h3>
+        <p>We help you understand what's actually in your solar agreement and whether the terms match what you were told at the time of signing.</p>
+      </div>
+      <div class="what-card">
+        <span class="icon">🔍</span>
+        <h3>Eligibility check</h3>
+        <p>Not everyone qualifies — but many do. A quick check helps you find out if your situation may allow for a review of your contract options.</p>
+      </div>
+      <div class="what-card">
+        <span class="icon">🤝</span>
+        <h3>No upfront cost</h3>
+        <p>Checking your eligibility is completely free. There are no lawyers involved and no fees to understand what options may be available to you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-inner">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">Three simple steps</h2>
+    <p class="section-sub">Finding out if you qualify takes under a minute and costs nothing.</p>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Answer two quick questions</h3>
+        <p>No personal details required at this stage. Just two simple questions about your experience with your solar provider.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Find out if you qualify</h3>
+        <p>Based on your answers, you'll immediately see whether your situation may be eligible for a free contract review.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Connect with our team</h3>
+        <p>If you qualify, a specialist will reach out to walk you through your options — no commitment required.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="section-inner">
+    <div class="section-label">Common Questions</div>
+    <h2 class="section-title">Frequently asked questions</h2>
+    <p class="section-sub">Answers to what homeowners ask us most often.</p>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Is this really free?
+          <span class="faq-chevron">⌄</span>
+        </button>
+        <div class="faq-a">
+          Yes. Checking your eligibility through Solar Cancel Now costs nothing. There are no hidden fees and no obligation to proceed after your free check.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Do I need a lawyer?
+          <span class="faq-chevron">⌄</span>
+        </button>
+        <div class="faq-a">
+          No. Our process does not require you to hire a lawyer. We connect homeowners with specialists who can review their situation and explain available options in plain language.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What types of solar contracts are covered?
+          <span class="faq-chevron">⌄</span>
+        </button>
+        <div class="faq-a">
+          We work with homeowners who have leases, power purchase agreements (PPAs), and financed solar panel contracts. If you're unsure which type you have, the eligibility check will help clarify.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What if I'm still not sure whether I was misled?
+          <span class="faq-chevron">⌄</span>
+        </button>
+        <div class="faq-a">
+          That's completely normal. Many homeowners aren't sure. The eligibility check is designed to help you figure that out — even if you just have a general sense that something didn't feel right when you signed.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How long does the process take?
+          <span class="faq-chevron">⌄</span>
+        </button>
+        <div class="faq-a">
+          The eligibility check takes less than 30 seconds. If you qualify and choose to move forward, a specialist will explain the timeline based on your specific situation.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Is my information kept private?
+          <span class="faq-chevron">⌄</span>
+        </button>
+        <div class="faq-a">
+          Yes. Any information you share is kept confidential and is only used to assess your eligibility and connect you with the appropriate specialist.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <h2>Find out where you stand — for free</h2>
+  <p>It takes less than 30 seconds and there's no obligation to proceed.</p>
+  <a href="solar-quiz.html">Check My Eligibility</a>
+  <div class="footnote">Free to check · No lawyers needed · No penalties</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon">☀️</div>
+        <div class="logo-text">
+          Solar Cancel Now
+          <span>solarcancelnow.com</span>
+        </div>
+      </div>
+      <p>Helping homeowners understand their solar contract rights since 2023.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Site</h4>
+        <a href="#">Home</a>
+        <a href="#how">How It Works</a>
+        <a href="#faq">FAQ</a>
+        <a href="solar-quiz.html">Check Eligibility</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Disclaimer</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Solar Cancel Now. All rights reserved.</span>
+    <span>This site does not provide legal advice. Results may vary.</span>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>
