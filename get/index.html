@@ -432,22 +432,8 @@
   <!-- MAIN CONTENT -->
   <div class="content">
 
-    <!-- PROGRESS -->
-    <div class="progress-wrap" id="progressWrap">
-      <div class="progress-label">
-        <span id="progressText">Step 1 of 3</span>
-        <span id="progressPct">33%</span>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="progressFill" style="width:33%"></div>
-      </div>
-    </div>
-
     <!-- ============ STEP 1 ============ -->
     <div class="quiz-card" id="step1">
-      <div class="step-label">Quick Check — Free</div>
-
-      <div class="state-eyebrow" id="stateEyebrow" style="text-align:center;">Loading your state...</div>
 
       <div class="quiz-headline" style="text-align:center;">
         <span id="stateName" class="accent">YOUR STATE</span><br>
@@ -459,7 +445,14 @@
         Answer 2 quick questions to find out if you qualify — takes less than 30 seconds.
       </div>
 
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;color:white;margin-bottom:20px;letter-spacing:0.5px;line-height:1.2;">
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:rgba(255,255,255,0.35);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">
+          <span id="progressText">Step 1 of 3</span><span id="progressPct">33%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:33%"></div></div>
+      </div>
+
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;color:white;margin-bottom:20px;letter-spacing:0.5px;line-height:1.2;text-align:center;">
         Do you feel your solar company<br>was honest with you?
       </div>
 
@@ -487,13 +480,19 @@
 
     <!-- ============ STEP 2 ============ -->
     <div class="quiz-card" id="step2" style="display:none;">
-      <div class="step-label">Almost There</div>
 
-      <div class="quiz-headline">
+      <div class="quiz-headline" style="text-align:center;">
         Where do you <span class="accent">live?</span>
       </div>
-      <div class="quiz-sub">
+      <div class="quiz-sub" style="text-align:center;">
         This helps us confirm your property type qualifies for contract cancellation review.
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:rgba(255,255,255,0.35);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">
+          <span id="progressText2">Step 2 of 3</span><span>66%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:66%"></div></div>
       </div>
 
       <div class="options">
@@ -606,9 +605,12 @@
     });
 
   function setProgress(pct, label) {
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressText').textContent = label;
-    document.getElementById('progressPct').textContent = pct + '%';
+    const fills = document.querySelectorAll('.progress-fill');
+    const texts = document.querySelectorAll('#progressText, #progressText2');
+    const pcts  = document.querySelectorAll('#progressPct');
+    fills.forEach(f => f.style.width = pct + '%');
+    if (document.getElementById('progressText')) document.getElementById('progressText').textContent = label;
+    if (document.getElementById('progressPct'))  document.getElementById('progressPct').textContent  = pct + '%';
   }
 
   function goToStep(n) {
@@ -646,8 +648,6 @@
     });
 
     // Show loading state
-    document.getElementById('progressWrap').style.display = 'none';
-
     const card = document.getElementById('step2');
     card.innerHTML = `
       <div style="text-align:center; padding:40px 0;">
@@ -662,7 +662,6 @@
     `;
 
     setTimeout(() => {
-      document.getElementById('progressWrap').style.display = '';
       setProgress(100, 'Step 3 of 3');
 
       // Update state names in step3 fallback
