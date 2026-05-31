@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar Companies Caught Hiding Key Details From Seniors | Investigation Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:wght@400;600&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #c0392b;
+    --red-dark: #96281b;
+    --navy: #1a2744;
+    --gold: #d4a017;
+    --off-white: #f8f6f1;
+    --gray-light: #f0eeea;
+    --gray: #666;
+    --text: #1a1a1a;
+    --border: #ddd;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--off-white);
+    color: var(--text);
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  /* TOP BREAKING NEWS BAR */
+  .breaking-bar {
+    background: var(--red);
+    color: white;
+    text-align: center;
+    padding: 10px 20px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    animation: pulse-bar 2s infinite;
+  }
+  @keyframes pulse-bar {
+    0%, 100% { background: var(--red); }
+    50% { background: var(--red-dark); }
+  }
+
+  /* PUBLICATION HEADER */
+  .pub-header {
+    background: var(--navy);
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    border-bottom: 3px solid var(--gold);
+  }
+  .pub-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2px;
+  }
+  .pub-tagline {
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 1px;
+  }
+
+  /* MAIN CONTAINER */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* ARTICLE HEADER */
+  .article-header {
+    background: white;
+    border-bottom: 4px solid var(--red);
+    padding: 32px 30px 28px;
+  }
+
+  .category-tag {
+    display: inline-block;
+    background: var(--red);
+    color: white;
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    margin-bottom: 16px;
+  }
+
+  .article-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 900;
+    line-height: 1.15;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+
+  .article-subhead {
+    font-family: 'Barlow', sans-serif;
+    font-size: 17px;
+    color: #444;
+    line-height: 1.5;
+    border-left: 4px solid var(--gold);
+    padding-left: 14px;
+    margin-bottom: 20px;
+  }
+
+  .article-meta {
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    color: var(--gray);
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  /* ARTICLE BODY */
+  .article-body {
+    background: white;
+    padding: 30px;
+    margin-bottom: 4px;
+  }
+
+  .hook-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3vw, 26px);
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  .hook-sub {
+    font-size: 18px;
+    color: #333;
+    font-style: italic;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  p { margin-bottom: 18px; }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 36px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--gold);
+  }
+
+  .pullquote {
+    background: var(--gray-light);
+    border-left: 5px solid var(--red);
+    padding: 20px 24px;
+    margin: 28px 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--navy);
+    line-height: 1.5;
+  }
+  .pullquote cite {
+    display: block;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--gray);
+    margin-top: 10px;
+  }
+
+  .alert-box {
+    background: #fff8e1;
+    border: 2px solid var(--gold);
+    border-left: 6px solid var(--gold);
+    padding: 20px 24px;
+    margin: 28px 0;
+  }
+  .alert-box-title {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #8a6700;
+    margin-bottom: 10px;
+  }
+  .alert-box p { margin-bottom: 8px; font-size: 16px; color: #444; }
+  .alert-box p:last-child { margin-bottom: 0; }
+
+  .benefit-list {
+    list-style: none;
+    margin: 16px 0 24px;
+    padding: 0;
+  }
+  .benefit-list li {
+    font-family: 'Barlow', sans-serif;
+    font-size: 17px;
+    padding: 10px 0 10px 32px;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    color: #222;
+  }
+  .benefit-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  /* URGENCY BAR */
+  .urgency-bar {
+    background: #1a1a1a;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .urgency-bar span { color: var(--gold); }
+
+  /* CTA PLACEHOLDER SECTION */
+  .cta-section {
+    background: white;
+    border-top: 5px solid var(--red);
+    padding: 40px 30px;
+    text-align: center;
+  }
+  .cta-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .cta-section-sub {
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 30px;
+  }
+
+  /* CTA PLACEHOLDER BOX */
+  .cta-placeholder {
+    border: 2px dashed rgba(255,255,255,0.25);
+    border-radius: 4px;
+    padding: 40px 24px;
+    margin-bottom: 24px;
+    background: rgba(255,255,255,0.04);
+  }
+  .cta-placeholder-label {
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .cta-placeholder-desc {
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.6;
+  }
+
+  /* CTA BUTTON */
+  .cta-btn {
+    display: inline-block;
+    background: var(--red);
+    color: white;
+    font-family: 'Barlow', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 18px 40px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 6px 20px rgba(192,57,43,0.4);
+    animation: cta-pulse 2.5s infinite;
+    letter-spacing: 0.3px;
+  }
+  @keyframes cta-pulse {
+    0%, 100% { box-shadow: 0 6px 20px rgba(192,57,43,0.4); }
+    50% { box-shadow: 0 6px 32px rgba(192,57,43,0.7); }
+  }
+  .cta-btn:hover { background: var(--red-dark); }
+  .cta-sub {
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    color: #999;
+    margin-top: 12px;
+  }
+
+  /* CTA INLINE (mid-content) */
+  .cta-inline {
+    background: var(--gray-light);
+    border: 2px solid var(--red);
+    padding: 20px 24px;
+    margin: 28px 0;
+    text-align: center;
+  }
+  .cta-btn-inline {
+    display: inline-block;
+    background: var(--red);
+    color: white;
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 14px 32px;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    transition: background 0.2s;
+  }
+  .cta-btn-inline:hover { background: var(--red-dark); }
+  .cta-inline-sub {
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    color: var(--gray);
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    background: #f0eeea;
+    padding: 20px 30px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px;
+    color: #999;
+    text-align: center;
+    line-height: 1.6;
+    border-top: 1px solid #ddd;
+  }
+
+  @media (max-width: 600px) {
+    .article-header, .article-body, .cta-section { padding: 22px 18px; }
+    .article-meta { flex-direction: column; gap: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BREAKING BAR -->
+<div class="breaking-bar">
+  ⚠️ &nbsp; BREAKING INVESTIGATION &nbsp;·&nbsp; CONSUMER ALERT &nbsp;·&nbsp; SOLAR INDUSTRY FRAUD &nbsp; ⚠️
+</div>
+
+<!-- PUBLICATION HEADER -->
+<div class="pub-header">
+  <div class="pub-name">American Consumer Watchdog Report</div>
+  <div class="pub-tagline">Protecting Homeowners Across The United States</div>
+</div>
+
+<div class="container">
+
+  <!-- ARTICLE HEADER -->
+  <div class="article-header">
+    <div class="category-tag">⚠️ Exclusive Investigation</div>
+    <h1 class="article-headline">Hidden Camera Footage Exposes How Solar Companies Trapped Millions of American Seniors — And How Some Are Getting Every Dollar Back</h1>
+    <p class="article-subhead">Lawsuits filed in 12 states. Settlements already paid. Here's how to find out if you're entitled to compensation.</p>
+    <div class="article-meta">
+      <span>📅 Updated: May 2025</span>
+      <span>📍 Nationwide Investigation</span>
+      <span>⏱ 3 min read</span>
+    </div>
+  </div>
+
+  <!-- ARTICLE BODY -->
+  <div class="article-body">
+
+    <p class="hook-text">This is how 4 million American seniors got locked into contracts they can never escape.</p>
+    <p class="hook-sub">And most of them still don't know it happened.</p>
+
+    <p>What you're about to read has been suppressed by the solar industry for years. Hidden inside contracts that most homeowners never fully read is a single clause — buried on page 14 — that has quietly transferred billions of dollars from American seniors directly into the pockets of solar executives.</p>
+
+    <p>It's called an <strong>escalator clause</strong>. And the salesman sitting at your kitchen table knew exactly what it meant. He just never mentioned it.</p>
+
+    <div class="section-title">The Promise That Was Never Real</div>
+
+    <p>Carol, 68, from Phoenix, Arizona, remembers the day the salesman came to her home in 2019. He was polite, professional, and brought a laptop full of charts showing exactly how much she'd save.</p>
+
+    <p>"He told us we'd never pay a high electric bill again," Carol said. "We trusted him completely. He sat in our living room for two hours."</p>
+
+    <div class="pullquote">
+      "I went back and read the contract. Page 14. A 2.9% annual price increase. Every year. For 25 years. Nobody told us that. Nobody pointed to page 14."
+      <cite>— Carol, 68, Phoenix AZ — Solar customer since 2019</cite>
+    </div>
+
+    <p>Today, Carol pays <strong>$187 per month</strong> to the solar company. Plus her regular electric bill on top of that.</p>
+
+    <p>Carol is not alone. Investigators now estimate that <strong>over 4 million American homeowners</strong> signed contracts containing terms they were never properly explained — and the number grows every month.</p>
+
+    <!-- CTA 1 -->
+    <div class="cta-inline">
+      <a href="https://go.pointclickpixel.com/click" class="cta-btn-inline">→ Find Out If Your Contract Qualifies</a>
+      <p class="cta-inline-sub">Free to check · No obligation · 60 seconds</p>
+    </div>
+
+    <div class="section-title">What They Never Showed You</div>
+
+    <p>The escalator clause hidden on page 14 of most standard solar contracts means one thing: <strong>your monthly payment increases by 2.9% every single year.</strong></p>
+
+    <p>That doesn't sound like much. Until you do the math.</p>
+
+    <div class="alert-box">
+      <div class="alert-box-title">📊 What a 2.9% Escalator Clause Actually Costs You</div>
+      <p>Year 1: $150/month &nbsp;→&nbsp; <strong>$1,800/year</strong></p>
+      <p>Year 5: $168/month &nbsp;→&nbsp; <strong>$2,016/year</strong></p>
+      <p>Year 10: $193/month &nbsp;→&nbsp; <strong>$2,316/year</strong></p>
+      <p>Year 25: $304/month &nbsp;→&nbsp; <strong>$3,648/year</strong></p>
+      <p style="margin-top:12px; font-weight:600; color: var(--red);">Total overpayment vs. what you were promised: up to $28,000</p>
+    </div>
+
+    <p>The salesman never showed you this chart. He showed you the one where the solar panels save you money.</p>
+
+    <!-- CTA 2 -->
+    <div class="cta-inline">
+      <a href="https://go.pointclickpixel.com/click" class="cta-btn-inline">→ Check If You're Owed Compensation</a>
+      <p class="cta-inline-sub">Free to check · No obligation · 60 seconds</p>
+    </div>
+
+    <div class="section-title">The Lawsuits Nobody Is Talking About</div>
+
+    <p>What the solar industry doesn't want you to know is that <strong>attorneys across the country are now fighting back.</strong></p>
+
+    <p>Class action lawsuits have been filed in 12 states against major solar installers, citing misrepresentation, failure to disclose key contract terms, and predatory sales practices specifically targeting seniors.</p>
+
+    <p>And homeowners are winning.</p>
+
+    <ul class="benefit-list">
+      <li>Thousands of affected homeowners are getting out of their contracts completely</li>
+      <li>Many are recovering months or years of overpayments</li>
+      <li>Settlements ranging from <strong>$1,000 to $18,000</strong> are already being paid</li>
+      <li>Eligibility can be checked at no cost and with no obligation</li>
+    </ul>
+
+    <!-- CTA 3 -->
+    <div class="cta-inline">
+      <a href="https://go.pointclickpixel.com/click" class="cta-btn-inline">→ See If You Qualify To Recover Your Money</a>
+      <p class="cta-inline-sub">Free to check · No obligation · 60 seconds</p>
+    </div>
+
+    <p>"These companies relied on people not reading the fine print," said one consumer rights attorney involved in the cases. "And when someone did read it, they were already locked in. That's not a contract. That's a trap."</p>
+
+    <div class="section-title">If You Signed A Solar Contract — Read This</div>
+
+    <p>You may be entitled to cancel your contract and receive compensation — regardless of how long ago you signed.</p>
+
+    <p>Eligibility depends on your state, the company you signed with, and the terms of your specific contract.</p>
+
+    <p><strong>The only way to know is to check.</strong> It takes 60 seconds and costs nothing.</p>
+
+    <div class="alert-box">
+      <div class="alert-box-title">⏰ Important Deadline Notice</div>
+      <p>Claim windows are closing as more homeowners file. These programs are only available in select states and on a first-come, first-served basis.</p>
+      <p><strong>If you wait, you may permanently lose your right to compensation.</strong></p>
+    </div>
+
+  </div><!-- end article-body -->
+
+  <!-- URGENCY BAR -->
+  <div class="urgency-bar">
+    ⚠️ &nbsp; Claim windows closing — <span>Check if you qualify before the deadline</span>
+  </div>
+
+  <!-- CTA SECTION -->
+  <div class="cta-section">
+    <div class="cta-section-title">Find Out If You're Entitled To Compensation</div>
+    <div class="cta-section-sub">If you signed a solar contract in the last 10 years, you may qualify to cancel it and recover thousands of dollars.</div>
+
+    <img src="images/map.png" alt="Eligible states map" style="width:100%;max-width:580px;display:block;margin:0 auto 24px;">
+
+    <a href="https://go.pointclickpixel.com/click" class="cta-btn">
+      ✓ &nbsp; Check If You Qualify Now →
+    </a>
+    <p class="cta-sub">Free to check &nbsp;·&nbsp; No obligation &nbsp;·&nbsp; Takes 60 seconds</p>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    This content is sponsored and for informational purposes only. Results vary. This is not legal advice. Individual outcomes depend on specific contract terms, state laws, and case circumstances. By clicking, you agree to be contacted by a licensed representative.
+  </div>
+
+</div>
+
+<script>
+  // Fade in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.style.opacity = 1;
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.pullquote, .alert-box').forEach(el => {
+    el.style.opacity = 0;
+    el.style.transition = 'opacity 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
