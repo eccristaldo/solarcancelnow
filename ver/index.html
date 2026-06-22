@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar Compensation Review</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #f5f2ec;
+    font-family: 'Arial Black', 'Arial Bold', Arial, sans-serif;
+    color: #111;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── TOP SCARCITY STRIP ── */
+  .strip {
+    width: 100%;
+    background: #111;
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 9px 16px;
+    font-family: Arial, sans-serif;
+  }
+
+  .strip .timer {
+    color: #f0a800;
+    font-weight: 900;
+  }
+
+  /* ── MAIN CONTAINER ── */
+  .wrap {
+    max-width: 480px;
+    width: 100%;
+    padding: 32px 24px 28px;
+  }
+
+  /* ── EYEBROW ── */
+  .eyebrow {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  /* ── HEADLINE ── */
+  h1 {
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1.08;
+    color: #111;
+    margin-bottom: 22px;
+    letter-spacing: -0.01em;
+  }
+
+  h1 .red { color: #cc2200; }
+
+  /* ── DIVIDER ── */
+  .rule {
+    border: none;
+    border-top: 2px solid #ddd;
+    margin: 0 0 22px;
+  }
+
+  /* ── BODY COPY ── */
+  .body {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #222;
+    margin-bottom: 20px;
+  }
+
+  .body strong { font-weight: 700; color: #111; }
+
+  /* ── REVIEW LINE ── */
+  .review-line {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    color: #222;
+    margin-bottom: 28px;
+    line-height: 1.4;
+  }
+
+  /* ── CTA BLOCK ── */
+  .cta-block {
+    margin-bottom: 10px;
+  }
+
+  .cta-label {
+    font-size: 20px;
+    font-weight: 900;
+    color: #111;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    background: #f0a800;
+    color: #111;
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 20px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 0px #b87e00;
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 4px 0px #b87e00, 0 0 0px rgba(240,168,0,0); }
+    50%       { box-shadow: 0 4px 0px #b87e00, 0 0 22px rgba(240,168,0,0.5); }
+  }
+
+  .btn:hover { background: #dda000; }
+
+  .no-cost {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #777;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  /* ── PAIN POINTS LIST ── */
+  .pain-section {
+    border-left: 4px solid #cc2200;
+    padding: 16px 18px;
+    background: #fff;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 24px;
+  }
+
+  .pain-section p {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    color: #222;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .pain-section p:last-child { margin-bottom: 0; }
+
+  .pain-section p::before {
+    content: "✗ ";
+    color: #cc2200;
+    font-weight: 900;
+  }
+
+  /* ── SCARCITY BOX ── */
+  .scarcity {
+    background: #111;
+    color: #fff;
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .scarcity strong { color: #f0a800; }
+
+  /* ── SOCIAL PROOF ── */
+  .social {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 20px;
+  }
+
+  .dot {
+    width: 9px; height: 9px;
+    background: #22aa44;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: blink 1.4s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+
+  /* ── BADGES ── */
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .badge {
+    background: #eee;
+    border-radius: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    padding: 6px 14px;
+  }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #bbb;
+    text-align: center;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<!-- SCARCITY STRIP -->
+<div class="strip">
+  ⚠️ Review window closing — <span class="timer" id="bar-timer">14:59</span> remaining for your state
+</div>
+
+<div class="wrap">
+
+  <p class="eyebrow">Solar Compensation Review</p>
+
+  <!-- HEADLINE — mirrors the ad tone exactly -->
+  <h1>
+    If you feel <span class="red">scammed</span><br>
+    or <span class="red">lied to</span><br>
+    by your solar company —<br>
+    you may qualify for<br>
+    up to <span class="red">$25,000.</span>
+  </h1>
+
+  <hr class="rule">
+
+  <!-- BODY — same rhythm as the ad -->
+  <p class="body">
+    Many homeowners were promised lower bills, only to end up with <strong>hidden liens, rising payments,</strong> or contracts they never fully understood.
+  </p>
+
+  <p class="review-line">This review only takes a few seconds.</p>
+
+  <!-- FIRST CTA -->
+  <div class="cta-block">
+    <p class="cta-label">👉 <strong>See if you qualify now.</strong></p>
+    <a href="https://go.pointclickpixel.com/click" class="btn">CHECK MY ELIGIBILITY NOW →</a>
+    <p class="no-cost">No cost to check. No obligation.</p>
+  </div>
+
+  <!-- PAIN POINTS -->
+  <div class="pain-section">
+    <p>Rising monthly payments you weren't warned about</p>
+    <p>A lien placed on your home without your knowledge</p>
+    <p>Contract terms that were confusing or misrepresented</p>
+    <p>Promises of savings that never materialized</p>
+  </div>
+
+  <!-- SCARCITY BOX -->
+  <div class="scarcity">
+    Reviews are being accepted on a <strong>limited basis by state and contract type.</strong><br><br>
+    Once your window closes — you lose your right to claim.
+  </div>
+
+  <!-- SOCIAL PROOF -->
+  <div class="social">
+    <span class="dot"></span>
+    <span><strong>1,284 homeowners</strong> checked their eligibility today</span>
+  </div>
+
+  <!-- SECOND CTA -->
+  <a href="https://go.pointclickpixel.com/click" class="btn">CLAIM MY $25,000 CHECK →</a>
+  <p class="no-cost">No cost to check. No obligation. Takes 30 seconds.</p>
+
+  <!-- BADGES -->
+  <div class="badges">
+    <span class="badge">✓ 30-Second Review</span>
+    <span class="badge">✓ No Cost To Check</span>
+    <span class="badge">✓ Instant Result</span>
+  </div>
+
+  <p class="disclaimer">
+    This page is for informational purposes only. Eligibility is not guaranteed and depends on your specific situation, contract, location, and other factors.
+  </p>
+
+</div>
+
+<script>
+  function countdown(id, mins, secs) {
+    var total = mins * 60 + secs;
+    var el = document.getElementById(id);
+    var iv = setInterval(function() {
+      if (total <= 0) { clearInterval(iv); el.textContent = '00:00'; return; }
+      total--;
+      var m = Math.floor(total / 60), s = total % 60;
+      el.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    }, 1000);
+  }
+  countdown('bar-timer', 14, 59);
+</script>
+
+</body>
+</html>
