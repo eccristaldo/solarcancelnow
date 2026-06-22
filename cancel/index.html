@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solar Contract Review</title>
+
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=aamgK6iLuqmk7FF08NqciaHH5wGgU6tPPsMZwJ3LDgVwLZuSHFNBsO7-8dvKTlljLpoyg01_sHdGcRTaDoQCF7ZMSG04ClFLio6hfEDYkTA54kGGtadEHNCg_Dc4arlMQ-oRV41YtmF3dc9TzmXB98aidNOeyAGPd9jgzP3_zydkWhDbZLQznI542BZQeHo-4Gapq61yHBmhQnJJaIgkEyXL8qorjGbg0UqIciWr0RlHNWjv-4Q5F_hdJIxKMrcxG_0tYv6_J1GIIGAbQHxvGWM7x5PcMrrfiNaDZX1yjtq7hqeJ83OaScWFwgKdqHp2T-vmFPCw1E6oWsebSMbrYQ" charset="UTF-8"></script><style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f6f6f2;
+      color: #111;
+      line-height: 1.28;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 14px 10px 28px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      background: #ffffff;
+      border: 1px solid #e2e2dc;
+      border-radius: 18px;
+      padding: 28px 24px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .alert-label {
+      display: inline-block;
+      background: #fff3cd;
+      color: #9a6400;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: 36px;
+      line-height: 1.04;
+      letter-spacing: -1px;
+      margin-bottom: 14px;
+      color: #111;
+    }
+
+    h1 span {
+      color: #c51616;
+    }
+
+    .subheadline {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #1a1a1a;
+    }
+
+    .amount {
+      color: #c51616;
+      white-space: nowrap;
+    }
+
+    .cta-wrap {
+      text-align: center;
+      margin: 18px 0 18px;
+    }
+
+    .cta {
+      display: block;
+      width: 100%;
+      background: #f5a623;
+      color: #111;
+      text-decoration: none;
+      font-size: 22px;
+      font-weight: 900;
+      padding: 18px 20px;
+      border-radius: 12px;
+      box-shadow: 0 6px 0 #c77d00;
+      transition: all 0.15s ease;
+      text-transform: uppercase;
+    }
+
+    .cta:hover {
+      transform: translateY(2px);
+      box-shadow: 0 4px 0 #c77d00;
+      background: #ffb637;
+    }
+
+    .microcopy {
+      font-size: 15px;
+      color: #555;
+      margin-top: 12px;
+      font-weight: 700;
+    }
+
+    .body-text {
+      font-size: 18px;
+      color: #252525;
+      margin-bottom: 14px;
+    }
+
+    .pain-box {
+      background: #fafafa;
+      border-left: 5px solid #c51616;
+      padding: 16px 16px;
+      border-radius: 10px;
+      margin: 18px 0;
+    }
+
+    .pain-box p {
+      font-size: 18px;
+      margin-bottom: 9px;
+    }
+
+    .pain-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .urgency {
+      background: #111;
+      color: #fff;
+      padding: 16px;
+      border-radius: 12px;
+      margin: 18px 0;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .trust-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+      font-size: 14px;
+      color: #555;
+      font-weight: 700;
+    }
+
+    .trust-item {
+      background: #f3f3ef;
+      padding: 9px 12px;
+      border-radius: 999px;
+    }
+
+    .disclaimer {
+      margin-top: 22px;
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 10px 8px 22px;
+      }
+
+      .container {
+        padding: 18px 16px;
+        border-radius: 12px;
+      }
+
+      .alert-label {
+        font-size: 10px;
+        padding: 6px 9px;
+        margin-bottom: 10px;
+      }
+
+      h1 {
+        font-size: 24px;
+        line-height: 1.02;
+        letter-spacing: -0.5px;
+        margin-bottom: 10px;
+      }
+
+      .subheadline {
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+
+      .cta-wrap {
+        margin: 12px 0 14px;
+      }
+
+      .cta {
+        font-size: 16px;
+        padding: 15px 12px;
+        border-radius: 10px;
+        box-shadow: 0 5px 0 #c77d00;
+      }
+
+      .microcopy {
+        font-size: 12px;
+        margin-top: 8px;
+      }
+
+      .body-text,
+      .pain-box p,
+      .urgency {
+        font-size: 13px;
+      }
+
+      .pain-box {
+        padding: 12px 12px;
+        margin: 14px 0;
+      }
+
+      .urgency {
+        padding: 13px;
+        margin: 14px 0;
+      }
+
+      .trust-row {
+        font-size: 12px;
+        gap: 7px;
+        margin-top: 14px;
+      }
+
+      .trust-item {
+        padding: 7px 9px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <section class="container">
+
+      <div class="alert-label">Attention Solar Homeowners</div>
+
+      <h1>
+        Were You <span>Pressured, Misled, or Lied To</span> When Signing Your Solar Contract?
+      </h1>
+
+      <p class="subheadline">
+        You may qualify for up to <span class="amount">$25,000 in compensation</span>.
+      </p>
+
+      <div class="cta-wrap">
+        <a href="https://go.pointclickpixel.com/click" class="cta">
+          See If I Can Cancel →
+        </a>
+
+        <div class="microcopy">
+          No cost to check. No obligation.
+        </div>
+      </div>
+
+      <div class="pain-box">
+        <p>Many homeowners were promised lower electric bills...</p>
+        <p>But later discovered rising monthly payments, hidden liens, confusing terms, or contracts that were almost impossible to cancel.</p>
+      </div>
+
+      <p class="body-text">
+        Now, certain homeowners are being reviewed for possible solar contract cancellation and compensation.
+      </p>
+
+      <p class="urgency">
+        This review only takes 30 seconds — but availability may be limited based on your state, contract type, and when you signed.
+      </p>
+
+      <div class="cta-wrap">
+        <a href="https://go.pointclickpixel.com/click" class="cta">
+          See If I Can Cancel →
+        </a>
+
+        <div class="microcopy">
+          No cost to check. No obligation.
+        </div>
+      </div>
+
+      <div class="trust-row">
+        <div class="trust-item">✓ Fast Review</div>
+        <div class="trust-item">✓ No Cost To Check</div>
+        <div class="trust-item">✓ Homeowner Eligibility</div>
+      </div>
+
+      <p class="disclaimer">
+        This page is for informational purposes only. Eligibility is not guaranteed and depends on your specific situation, contract, location, and other factors.
+      </p>
+
+    </section>
+  </main>
+</body>
+</html>
