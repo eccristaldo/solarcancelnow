@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar Compensation Check</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .topbar {
+    width: 100%;
+    background: #cc2200;
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 99;
+  }
+
+  .topbar .timer {
+    background: #fff;
+    color: #cc2200;
+    font-weight: 900;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .wrap {
+    max-width: 480px;
+    width: 100%;
+    padding: 32px 20px 60px;
+    text-align: center;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #22aa44;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 7px 18px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* SPOTS ALERT */
+  .spots-alert {
+    background: #1a1a1a;
+    border: 2px solid #cc2200;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+  }
+
+  .spots-alert .spots-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #cc2200;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .spots-alert h1 {
+    font-size: 44px;
+    font-weight: 900;
+    line-height: 1.15;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .spots-alert h1 .gold  { color: #f0a800; }
+  .spots-alert h1 .city  { color: #f0a800; }
+
+  .spots-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #2a2a2a;
+  }
+
+  .spots-number {
+    font-size: 64px;
+    font-weight: 900;
+    color: #cc2200;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .spots-text {
+    font-size: 13px;
+    color: #aaa;
+    text-align: left;
+    line-height: 1.4;
+  }
+
+  .spots-text strong { color: #fff; }
+
+  /* QUALIFY */
+  h2 {
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1.08;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  h2 .gold  { color: #f0a800; }
+  h2 .green { color: #22aa44; }
+
+  .sub {
+    font-size: 15px;
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .sub strong { color: #fff; }
+
+  .deadline {
+    background: #cc2200;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.5;
+  }
+
+  .deadline .big {
+    font-size: 18px;
+    font-weight: 900;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 20px;
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    background: #22aa44;
+    border-radius: 50%;
+    animation: blink 1.4s infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .btn {
+    display: block;
+    width: 100%;
+    background: #f0a800;
+    color: #111;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 22px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-bottom: 10px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 4px 0 #b87e00, 0 0 0 rgba(240,168,0,0); }
+    50%      { box-shadow: 0 4px 0 #b87e00, 0 0 28px rgba(240,168,0,0.5); }
+  }
+
+  .btn:hover { background: #dda000; }
+
+  .no-cost {
+    font-size: 12px;
+    color: #444;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .result-table {
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .result-table .row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 8px 0;
+    border-bottom: 1px solid #252525;
+    color: #777;
+  }
+
+  .result-table .row:last-child { border-bottom: none; }
+  .result-table .row .green { color: #22aa44; font-weight: 700; }
+  .result-table .row .gold  { color: #f0a800; font-weight: 700; }
+
+  .disclaimer {
+    font-size: 15px;
+    color: #2e2e2e;
+    text-align: center;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* Loading state */
+  .city-placeholder { color: #555; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  ⚠️ Closes tonight —
+  <span class="timer" id="bar-timer">--:--:--</span>
+  remaining
+</div>
+
+<div class="wrap">
+
+  <!-- SINGLE HEADLINE + SCARCITY BLOCK -->
+  <div class="spots-alert">
+    <p class="spots-label">⚠️ Spots available in <span id="user-city">your area</span></p>
+    <h1>Only <span id="spot-count">19</span> spots left to claim the <span class="gold">$25,000</span> compensation</h1>
+  </div>
+
+  <p class="sub">
+    If your solar company misled you, you may qualify for <strong>full contract cancellation and up to $25,000 in financial compensation.</strong>
+  </p>
+
+  <div class="deadline">
+    <span class="big">⚠️ Act Now — Closes Tonight</span>
+    No extensions. No exceptions.<br>
+    Time remaining: <strong id="result-timer">--:--:--</strong>
+  </div>
+
+  <div class="social">
+    <span class="dot"></span>
+    <span><strong style="color:#ccc">1,284 homeowners</strong> checked eligibility today</span>
+  </div>
+
+  <a href="https://go.pointclickpixel.com/click" class="btn">👉 CLAIM MY $25,000 NOW →</a>
+  <p class="no-cost">No cost to check. No obligation.</p>
+
+  <div class="result-table">
+    <div class="row"><span>Your location</span><span class="green" id="user-city-3">Detecting...</span></div>
+    <div class="row"><span>State review window</span><span class="green">✓ OPEN</span></div>
+    <div class="row"><span>Spots remaining</span><span class="gold" id="spots-table">19</span></div>
+    <div class="row"><span>Max compensation</span><span class="gold">Up to $25,000</span></div>
+  </div>
+
+  <a href="https://go.pointclickpixel.com/click" class="btn">CONFIRM MY ELIGIBILITY →</a>
+  <p class="no-cost">No cost to check. No obligation.</p>
+
+  <p class="disclaimer">
+    This page is for informational purposes only. Eligibility is not guaranteed and depends on your specific situation, contract, location, and other factors.
+  </p>
+
+</div>
+
+<script>
+  // ── GEOIP ──
+  fetch('https://ipapi.co/json/')
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      var city = data.city || 'your area';
+      var state = data.region_code || '';
+      var label = city + (state ? ', ' + state : '');
+
+      document.getElementById('user-city').textContent = label;
+      
+      document.getElementById('user-city-3').textContent = '📍 ' + label;
+    })
+    .catch(function(){ /* silently fallback to "your area" */ });
+
+  // ── FAKE SPOT DECREMENT ──
+  // Starts at 19, drops by 1 every 45-90 seconds randomly
+  var spots = 19;
+  function dropSpot() {
+    if (spots > 3) {
+      spots--;
+      ['spot-count'].forEach(function(id){
+        var el = document.getElementById(id);
+        if (el) el.textContent = spots;
+      });
+    }
+    var next = (45 + Math.floor(Math.random() * 45)) * 1000;
+    setTimeout(dropSpot, next);
+  }
+  setTimeout(dropSpot, (45 + Math.floor(Math.random() * 45)) * 1000);
+
+  // ── COUNTDOWN TO MIDNIGHT ──
+  function fmt(s) {
+    var h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+    return (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(sec<10?'0':'')+sec;
+  }
+
+  function secondsToMidnight() {
+    var now = new Date(), mid = new Date();
+    mid.setHours(23,59,59,0);
+    return Math.max(0, Math.floor((mid - now)/1000));
+  }
+
+  var total = secondsToMidnight();
+  var timers = [document.getElementById('bar-timer'), document.getElementById('result-timer')];
+  timers.forEach(function(el){ el.textContent = fmt(total); });
+
+  setInterval(function(){
+    if(total > 0) total--;
+    timers.forEach(function(el){ el.textContent = fmt(total); });
+  }, 1000);
+</script>
+
+</body>
+</html>
