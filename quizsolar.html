@@ -1,0 +1,250 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  #screen { width: 100%; max-width: 420px; margin: 0 auto; min-height: 600px; position: relative; overflow: hidden; }
+
+  #checking-screen {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 600px; padding: 2rem; background: #fff; text-align: center;
+  }
+
+  .logo-area { margin-bottom: 2rem; }
+  .logo-text { font-size: 28px; font-weight: 700; color: #1a7a3c; letter-spacing: -0.5px; }
+  .logo-sub { font-size: 13px; color: #666; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+
+  .spinner-wrap { margin: 2rem 0; }
+  .spinner {
+    width: 64px; height: 64px; border: 5px solid #e0f5e9;
+    border-top: 5px solid #1a7a3c; border-radius: 50%;
+    animation: spin 0.9s linear infinite; margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .checking-title { font-size: 22px; font-weight: 700; color: #111; margin-bottom: 8px; }
+  .checking-sub { font-size: 15px; color: #666; line-height: 1.5; }
+
+  .progress-wrap { width: 100%; background: #e0f5e9; border-radius: 99px; height: 8px; margin: 2rem 0; overflow: hidden; }
+  .progress-bar { height: 8px; background: #1a7a3c; border-radius: 99px; width: 0%; transition: width 0.3s ease; }
+
+  .steps { text-align: left; width: 100%; margin-top: 1rem; }
+  .step { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 14px; color: #999; }
+  .step.done { color: #1a7a3c; }
+  .step.active { color: #111; font-weight: 500; }
+  .step-icon { width: 22px; height: 22px; border-radius: 50%; background: #e0f5e9; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .step.done .step-icon { background: #1a7a3c; color: #fff; }
+  .step.active .step-icon { background: #111; color: #fff; }
+
+  #congrats-screen {
+    display: none; flex-direction: column; align-items: center;
+    min-height: 600px; padding: 0; background: #fff; text-align: center; position: relative; overflow: hidden;
+  }
+
+  .green-header {
+    background: #1a7a3c; width: 100%; padding: 2.5rem 1.5rem 3rem;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  .checkmark-circle {
+    width: 72px; height: 72px; border-radius: 50%; background: #fff;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem;
+  }
+  .checkmark-circle svg { width: 38px; height: 38px; }
+
+  .congrats-title { font-size: 28px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 6px; }
+  .congrats-sub { font-size: 15px; color: rgba(255,255,255,0.85); }
+
+  .amount-card {
+    background: #fff; border-radius: 16px; margin: -1.5rem 1.2rem 0;
+    padding: 1.5rem 1.2rem; box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    position: relative; z-index: 2;
+  }
+
+  .amount-label { font-size: 13px; color: #666; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+  .amount-value { font-size: 52px; font-weight: 800; color: #1a7a3c; line-height: 1; margin-bottom: 4px; }
+  .amount-desc { font-size: 13px; color: #888; }
+
+  .divider { width: 40px; height: 3px; background: #1a7a3c; border-radius: 99px; margin: 1rem auto; }
+
+  .body-area { padding: 1.2rem 1.5rem; }
+
+  .info-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 1rem; text-align: left; }
+  .info-icon { width: 36px; height: 36px; border-radius: 50%; background: #e0f5e9; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .info-icon svg { width: 18px; height: 18px; stroke: #1a7a3c; }
+  .info-text { font-size: 14px; color: #333; line-height: 1.5; padding-top: 8px; }
+  .info-text strong { color: #111; font-weight: 600; }
+
+  .cta-btn {
+    display: block; width: calc(100% - 3rem); margin: 0.5rem 1.5rem 0.8rem;
+    background: #1a7a3c; color: #fff; border: none; border-radius: 12px;
+    padding: 18px; font-size: 17px; font-weight: 700; cursor: pointer;
+    animation: pulse-btn 2s ease-in-out infinite;
+  }
+  @keyframes pulse-btn {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(26,122,60,0.4); }
+    50% { transform: scale(1.02); box-shadow: 0 0 0 8px rgba(26,122,60,0); }
+  }
+
+  .disclaimer { font-size: 11px; color: #aaa; padding: 0 1.5rem 1.5rem; line-height: 1.5; }
+
+  .confetti-piece {
+    position: absolute; width: 8px; height: 8px; top: -10px;
+    animation: fall linear forwards;
+    border-radius: 2px;
+  }
+  @keyframes fall {
+    to { transform: translateY(620px) rotate(720deg); opacity: 0; }
+  }
+</style>
+
+<div id="screen">
+  <div id="checking-screen">
+    <div class="logo-area">
+      <div class="logo-text">☀ SOLAR RELIEF</div>
+      <div class="logo-sub">Compensation Program</div>
+    </div>
+
+    <div class="spinner-wrap">
+      <div class="spinner"></div>
+    </div>
+
+    <div class="checking-title">Checking your eligibility...</div>
+    <div class="checking-sub">Please wait while we verify your information with our database.</div>
+
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="steps" id="steps-list">
+      <div class="step active" id="step1">
+        <div class="step-icon">1</div>
+        Verifying solar contract status
+      </div>
+      <div class="step" id="step2">
+        <div class="step-icon">2</div>
+        Checking compensation eligibility
+      </div>
+      <div class="step" id="step3">
+        <div class="step-icon">3</div>
+        Calculating your settlement amount
+      </div>
+      <div class="step" id="step4">
+        <div class="step-icon">4</div>
+        Preparing your results
+      </div>
+    </div>
+  </div>
+
+  <div id="congrats-screen">
+    <div class="green-header">
+      <div class="checkmark-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a7a3c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <div class="congrats-title">CONGRATULATIONS!<br>YOU QUALIFY!</div>
+      <div class="congrats-sub">Your eligibility has been confirmed</div>
+    </div>
+
+    <div class="amount-card">
+      <div class="amount-label">Your compensation amount</div>
+      <div class="amount-value">$25,000</div>
+      <div class="amount-desc">Solar Contract Settlement</div>
+      <div class="divider"></div>
+      <div style="font-size:14px; color:#333; line-height:1.6;">
+        Based on your solar contract, you are eligible to receive <strong style="color:#1a7a3c;">$25,000</strong> in compensation.
+      </div>
+    </div>
+
+    <div class="body-area">
+      <div class="info-row">
+        <div class="info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.5 12 19.79 19.79 0 011.22 3.36 2 2 0 013.22 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"></path>
+          </svg>
+        </div>
+        <div class="info-text"><strong>Where should we send your check?</strong><br>Tap below to confirm your details and receive your $25,000.</div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div class="info-text"><strong>Act now — spots are limited.</strong><br>This program closes tonight. Don't lose your spot.</div>
+      </div>
+    </div>
+
+    <button class="cta-btn">CLAIM MY $25,000 NOW →</button>
+    <div class="disclaimer">Results based on eligibility criteria. Limited spots available. Program subject to availability.</div>
+  </div>
+</div>
+
+<script>
+  const steps = [
+    { id: 'step1', duration: 1800 },
+    { id: 'step2', duration: 1600 },
+    { id: 'step3', duration: 1400 },
+    { id: 'step4', duration: 1000 },
+  ];
+
+  const progressBar = document.getElementById('progress-bar');
+  let currentStep = 0;
+  let progress = 0;
+
+  function advanceStep() {
+    if (currentStep >= steps.length) {
+      showCongrats();
+      return;
+    }
+    const el = document.getElementById(steps[currentStep].id);
+    if (currentStep > 0) {
+      const prev = document.getElementById(steps[currentStep - 1].id);
+      prev.classList.remove('active');
+      prev.classList.add('done');
+      prev.querySelector('.step-icon').textContent = '✓';
+    }
+    el.classList.add('active');
+    progress = ((currentStep + 1) / steps.length) * 100;
+    progressBar.style.width = progress + '%';
+    setTimeout(() => {
+      currentStep++;
+      advanceStep();
+    }, steps[currentStep] ? steps[currentStep].duration : 1000);
+  }
+
+  function showCongrats() {
+    const last = document.getElementById(steps[steps.length - 1].id);
+    last.classList.remove('active');
+    last.classList.add('done');
+    last.querySelector('.step-icon').textContent = '✓';
+
+    setTimeout(() => {
+      document.getElementById('checking-screen').style.display = 'none';
+      const cs = document.getElementById('congrats-screen');
+      cs.style.display = 'flex';
+      spawnConfetti();
+    }, 400);
+  }
+
+  function spawnConfetti() {
+    const colors = ['#1a7a3c','#2ecc71','#f1c40f','#27ae60','#f39c12','#ffffff'];
+    const container = document.getElementById('congrats-screen');
+    for (let i = 0; i < 40; i++) {
+      setTimeout(() => {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + '%';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+        piece.style.animationDelay = '0s';
+        piece.style.opacity = '0.9';
+        container.appendChild(piece);
+        setTimeout(() => piece.remove(), 4000);
+      }, i * 60);
+    }
+  }
+
+  advanceStep();
+</script>
