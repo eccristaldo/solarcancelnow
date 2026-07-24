@@ -319,6 +319,169 @@
       text-align: center;
     }
 
+
+
+    body.is-loading {
+      overflow: hidden;
+    }
+
+    .eligibility-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(22, 153, 196, 0.12), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, #f8fcfd 100%);
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.52s ease, visibility 0.52s ease;
+    }
+
+    .eligibility-loader.is-complete {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-card {
+      width: min(100%, 520px);
+      padding: 42px 38px 36px;
+      text-align: center;
+      background: #fff;
+      border: 1px solid rgba(22, 153, 196, 0.14);
+      border-radius: 24px;
+      box-shadow: 0 22px 60px rgba(17, 113, 147, 0.15);
+    }
+
+    .loader-ring {
+      position: relative;
+      width: 106px;
+      height: 106px;
+      margin: 0 auto 25px;
+      border-radius: 50%;
+      background: conic-gradient(var(--green) 0deg, var(--blue) 120deg, var(--orange) 240deg, var(--green) 360deg);
+      animation: loaderSpin 1.05s linear infinite;
+    }
+
+    .loader-ring::before {
+      content: "";
+      position: absolute;
+      inset: 9px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .loader-ring::after {
+      content: "✓";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: var(--green);
+      font-size: 42px;
+      font-weight: 900;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity 0.25s ease, transform 0.35s ease;
+    }
+
+    .loader-card.done .loader-ring {
+      background: var(--green-soft);
+      animation: none;
+      box-shadow: 0 0 0 10px rgba(32, 181, 107, 0.08);
+    }
+
+    .loader-card.done .loader-ring::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .loader-kicker {
+      margin: 0 0 8px;
+      color: var(--blue-dark);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .loader-title {
+      margin: 0;
+      font-size: clamp(27px, 6vw, 38px);
+      line-height: 1.08;
+      letter-spacing: -1.3px;
+      font-weight: 900;
+    }
+
+    .loader-status {
+      min-height: 25px;
+      margin: 17px 0 22px;
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 700;
+      transition: opacity 0.18s ease;
+    }
+
+    .loader-status.changing {
+      opacity: 0;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 12px;
+      overflow: hidden;
+      background: #edf2f4;
+      border-radius: 999px;
+      box-shadow: inset 0 1px 3px rgba(16, 19, 26, 0.08);
+    }
+
+    .progress-bar {
+      width: 4%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--green), var(--orange));
+      border-radius: inherit;
+      box-shadow: 0 0 18px rgba(32, 181, 107, 0.3);
+      transition: width 0.65s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 10px;
+      color: #9299a1;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .page {
+      opacity: 0;
+      transform: translateY(22px) scale(0.985);
+    }
+
+    .page.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition: opacity 0.62s ease, transform 0.72s cubic-bezier(.2,.9,.2,1);
+    }
+
+    .page.is-visible .result-card {
+      animation: resultBoom 0.72s cubic-bezier(.18,.89,.32,1.28) both;
+    }
+
+    @keyframes loaderSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes resultBoom {
+      0% { opacity: 0; transform: scale(0.88); }
+      68% { opacity: 1; transform: scale(1.025); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
     @keyframes pop {
       0% { opacity: 0; transform: scale(0.65); }
       70% { transform: scale(1.07); }
@@ -367,8 +530,25 @@
   </style>
 </head>
 
-<body>
-  <main class="page">
+<body class="is-loading">
+
+  <div class="eligibility-loader" id="eligibilityLoader" role="status" aria-live="polite" aria-label="Verifying eligibility">
+    <div class="loader-card" id="loaderCard">
+      <div class="loader-ring" aria-hidden="true"></div>
+      <p class="loader-kicker">Secure eligibility review</p>
+      <h2 class="loader-title">Verifying Your Information</h2>
+      <p class="loader-status" id="loaderStatus">Reviewing your submitted responses...</p>
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="progress-meta">
+        <span>Secure check in progress</span>
+        <span id="progressNumber">4%</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="page" id="resultPage">
     <header class="brand" aria-label="Solar Equity Solutions">
       <div class="brand-mark">
         <span class="brand-main">S<span class="brand-sun" aria-hidden="true"></span>LAR</span>
@@ -440,6 +620,45 @@
   </main>
 
   <script>
+    const loader = document.getElementById("eligibilityLoader");
+    const loaderCard = document.getElementById("loaderCard");
+    const loaderStatus = document.getElementById("loaderStatus");
+    const progressBar = document.getElementById("progressBar");
+    const progressNumber = document.getElementById("progressNumber");
+    const resultPage = document.getElementById("resultPage");
+
+    const verificationSteps = [
+      { delay: 450,  progress: 24, text: "Reviewing your submitted responses..." },
+      { delay: 1150, progress: 48, text: "Checking solar contract eligibility..." },
+      { delay: 1950, progress: 73, text: "Calculating your reimbursement amount..." },
+      { delay: 2800, progress: 92, text: "Finalizing your eligibility result..." },
+      { delay: 3550, progress: 100, text: "Eligibility confirmed!" }
+    ];
+
+    function updateStep(step) {
+      loaderStatus.classList.add("changing");
+      setTimeout(() => {
+        loaderStatus.textContent = step.text;
+        loaderStatus.classList.remove("changing");
+      }, 160);
+      progressBar.style.width = step.progress + "%";
+      progressNumber.textContent = step.progress + "%";
+    }
+
+    verificationSteps.forEach((step) => {
+      setTimeout(() => updateStep(step), step.delay);
+    });
+
+    setTimeout(() => {
+      loaderCard.classList.add("done");
+    }, 3550);
+
+    setTimeout(() => {
+      loader.classList.add("is-complete");
+      resultPage.classList.add("is-visible");
+      document.body.classList.remove("is-loading");
+    }, 4200);
+
     document.querySelector(".cta").addEventListener("click", function (event) {
       if (this.getAttribute("href") === "#complete") {
         event.preventDefault();
