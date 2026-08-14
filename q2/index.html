@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Solar Refund Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#12A150;
+    --green-deep:#0B7A3C;
+    --green-bright:#38D875;
+    --mint:#EAFBF1;
+    --paper:#F5FAF6;
+    --card:#FFFFFF;
+    --gold:#F2B705;
+    --coral:#FF6B57;
+    --ink:#0E1F17;
+    --ink-70: rgba(14,31,23,0.7);
+    --ink-45: rgba(14,31,23,0.45);
+    --line:#DCEEE2;
+    --shadow: 0 18px 44px -18px rgba(11,122,60,0.28);
+    --radius: 20px;
+    --display:'Space Grotesk', 'Inter', sans-serif;
+    --sans:'Inter', -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 8% -8%, rgba(18,161,80,0.14), transparent 42%),
+      radial-gradient(circle at 100% 0%, rgba(56,216,117,0.12), transparent 40%),
+      var(--paper);
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:30; width:100%;
+    background:rgba(245,250,246,0.9); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+    padding:13px 16px;
+  }
+  .topbar-inner{max-width:480px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;}
+  .brand{font-family:var(--display); font-weight:700; font-size:15px; color:var(--ink); display:flex; align-items:center; gap:7px;}
+  .brand .bug{
+    width:22px; height:22px; border-radius:7px; background:linear-gradient(160deg,var(--green-bright),var(--green-deep));
+    display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff;
+  }
+  .dot-steps{display:flex; gap:5px;}
+  .dot-steps .d{width:7px; height:7px; border-radius:50%; background:var(--line); transition:background .3s, transform .3s;}
+  .dot-steps .d.on{background:var(--green); transform:scale(1.2);}
+
+  .stage{width:100%; max-width:480px; padding:0 16px 50px; flex:1; display:flex; flex-direction:column; position:relative;}
+
+  /* ---------- hero (promise headline) ---------- */
+  .hero{padding:30px 2px 6px; text-align:center;}
+  .hero-eyebrow{
+    display:inline-flex; align-items:center; gap:6px; font-family:var(--sans); font-weight:700; font-size:11.5px;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--green-deep);
+    background:var(--mint); border:1px solid rgba(18,161,80,0.2); border-radius:999px; padding:6px 13px; margin-bottom:16px;
+  }
+  .hero h1{
+    font-family:var(--display); font-weight:700; font-size:32px; line-height:1.16; color:var(--ink);
+    margin:0 0 12px; letter-spacing:-0.01em;
+  }
+  .hero h1 .accent{color:var(--green-deep);}
+  .hero p{font-size:15px; line-height:1.55; color:var(--ink-70); margin:0 auto 18px; max-width:360px;}
+  .hero-trust{display:flex; align-items:center; justify-content:center; gap:14px; font-size:12px; font-weight:600; color:var(--ink-45); margin-bottom:6px; flex-wrap:wrap;}
+  .hero-trust span{display:flex; align-items:center; gap:5px;}
+
+  /* ---------- card ---------- */
+  .card{
+    background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    border:1px solid rgba(18,161,80,0.08);
+    padding:28px 24px 26px; position:relative; overflow:hidden; margin-top:6px;
+  }
+  .back-row{display:flex; align-items:center; min-height:18px; margin-bottom:10px;}
+  .back-btn{background:none; border:none; cursor:pointer; font-family:var(--sans); font-weight:600; font-size:13px; color:var(--ink-45); display:flex; align-items:center; gap:5px; padding:0;}
+  .back-btn:hover{color:var(--ink);}
+
+  .card-kicker{font-family:var(--sans); font-weight:700; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--green-deep); margin-bottom:8px;}
+  h2{font-family:var(--display); font-weight:700; font-size:22px; line-height:1.28; margin:0 0 8px; color:var(--ink);}
+  .lede{font-size:14px; line-height:1.5; color:var(--ink-70); margin:0 0 22px;}
+
+  /* ---------- slider ---------- */
+  .meter-value{display:flex; align-items:baseline; justify-content:center; gap:2px; font-family:var(--display); font-weight:700; margin-bottom:6px;}
+  .meter-value .sym{font-size:22px; color:var(--ink-45);}
+  .meter-value .num{font-size:46px; color:var(--green-deep); transition:color .2s; letter-spacing:-0.01em;}
+  .meter-value .per{font-size:13px; color:var(--ink-45); align-self:flex-end; margin-bottom:9px; font-family:var(--sans); font-weight:600;}
+
+  .slider-track-shell{position:relative; padding:14px 4px 2px;}
+  .track-base{height:14px; border-radius:8px; background:var(--line); overflow:hidden;}
+  .track-fill{height:100%; width:45%; border-radius:8px; background:linear-gradient(90deg,var(--green),var(--gold)); transition:width .05s linear;}
+  input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:38px; background:transparent; position:relative; margin-top:-30px; cursor:pointer;}
+  input[type=range]::-webkit-slider-runnable-track{height:38px; background:transparent;}
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none; width:30px; height:30px; border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, #fff, var(--green-bright) 55%, var(--green-deep));
+    border:4px solid #fff; box-shadow:0 6px 14px rgba(11,122,60,0.45); cursor:grab; transition:transform .15s;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:30px; height:30px; border-radius:50%; border:4px solid #fff;
+    background:radial-gradient(circle at 32% 28%, #fff, var(--green-bright) 55%, var(--green-deep));
+    box-shadow:0 6px 14px rgba(11,122,60,0.45); cursor:grab;
+  }
+  input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15);}
+  .scale-labels{display:flex; justify-content:space-between; font-family:var(--sans); font-weight:600; font-size:11px; color:var(--ink-45); margin-top:9px;}
+
+  .reaction{
+    margin-top:18px; padding:13px 15px; border-radius:14px; background:var(--mint);
+    font-size:13.5px; line-height:1.5; font-weight:500; color:var(--ink);
+    min-height:48px; display:flex; align-items:center; gap:10px;
+    opacity:0; transform:translateY(6px); transition:opacity .35s, transform .35s, background .3s;
+  }
+  .reaction.show{opacity:1; transform:translateY(0);}
+  .reaction.hot{background:#FFF3E0;}
+  .reaction .spark{font-size:16px; flex-shrink:0;}
+
+  /* ---------- buttons ---------- */
+  .cta{
+    width:100%; margin-top:22px; border:none; cursor:pointer;
+    font-family:var(--display); font-weight:700; font-size:16px; color:#fff;
+    background:linear-gradient(180deg,var(--green),var(--green-deep));
+    padding:16px 20px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 12px 24px -10px rgba(11,122,60,0.55);
+    transition:transform .15s, box-shadow .15s, opacity .2s;
+  }
+  .cta:disabled{opacity:.4; cursor:not-allowed; box-shadow:none;}
+  .cta:not(:disabled):hover{transform:translateY(-1px);}
+  .cta:not(:disabled):active{transform:translateY(0) scale(.98);}
+  .micro-trust{text-align:center; font-size:11.5px; font-weight:600; color:var(--ink-45); margin-top:10px; display:flex; align-items:center; justify-content:center; gap:6px;}
+
+  /* ---------- tap questions ---------- */
+  .big-tap-row{display:flex; gap:12px; margin-top:4px;}
+  .big-tap{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:10px;
+    border:2px solid var(--line); background:var(--card); border-radius:16px;
+    padding:24px 14px; cursor:pointer; transition:all .15s;
+  }
+  .big-tap .badge{
+    width:52px; height:52px; border-radius:50%; background:var(--mint);
+    display:flex; align-items:center; justify-content:center; font-size:26px; transition:all .15s;
+  }
+  .big-tap .label{font-family:var(--display); font-weight:700; font-size:16px; color:var(--ink);}
+  .big-tap:hover{border-color:var(--green-bright);}
+  .big-tap.selected{border-color:var(--green); background:var(--mint); transform:scale(.97);}
+  .big-tap.selected .badge{background:var(--green); }
+
+  /* ---------- loader ---------- */
+  .loader-wrap{padding:20px 4px 8px; text-align:center;}
+  .pct-ring-shell{position:relative; width:126px; height:126px; margin:0 auto;}
+  .pct-ring{width:126px; height:126px; transform:rotate(-90deg);}
+  .pct-track{fill:none; stroke:var(--line); stroke-width:9;}
+  .pct-bar{
+    fill:none; stroke:var(--green); stroke-width:9; stroke-linecap:round;
+    stroke-dasharray:326.7; stroke-dashoffset:326.7; transition:stroke-dashoffset .15s linear, stroke .3s;
+  }
+  .pct-num{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:var(--display); font-weight:700; font-size:26px; color:var(--ink);}
+  .check-list{margin-top:20px; display:flex; flex-direction:column; gap:11px; text-align:left; max-width:280px; margin-left:auto; margin-right:auto;}
+  .check-row{display:flex; align-items:center; gap:10px; font-family:var(--sans); font-weight:600; font-size:13.5px; color:var(--ink-45); transition:color .25s;}
+  .check-row .dot{flex-shrink:0; width:21px; height:21px; border-radius:50%; border:2px solid var(--line); display:flex; align-items:center; justify-content:center; transition:all .25s; position:relative;}
+  .check-row.done{color:var(--ink);}
+  .check-row.done .dot{background:var(--green); border-color:var(--green); animation:popCheck .35s ease;}
+  .check-row.done .dot::after{content:"✓"; color:#fff; font-size:12px; font-weight:800;}
+  @keyframes popCheck{0%{transform:scale(.6);} 60%{transform:scale(1.2);} 100%{transform:scale(1);}}
+
+  /* ---------- reveal / celebration ---------- */
+  .confetti-layer{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:50;}
+  .confetti-piece{position:absolute; top:-20px; border-radius:2px; opacity:0; animation:fall linear forwards;}
+  @keyframes fall{0%{opacity:1; transform:translateY(0) rotate(0deg);} 100%{opacity:.9; transform:translateY(110vh) rotate(600deg);}}
+
+  .badge-burst{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    font-family:var(--display); font-weight:700; font-size:14px; color:var(--green-deep);
+    background:var(--mint); border:1px solid rgba(18,161,80,0.22); border-radius:999px; padding:8px 16px; margin:0 auto 14px; width:fit-content;
+    animation:bounceIn .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes bounceIn{0%{opacity:0; transform:scale(.4);} 60%{opacity:1; transform:scale(1.08);} 100%{transform:scale(1);}}
+
+  .congrats-h{font-family:var(--display); font-weight:700; font-size:23px; text-align:center; color:var(--ink); margin:0 0 4px; letter-spacing:-0.01em;}
+  .reveal-lede{font-size:14px; color:var(--ink-70); margin:0 0 6px; text-align:center;}
+
+  .amount-shell{
+    text-align:center; margin:14px 0 8px; position:relative; padding:22px 10px;
+    background:radial-gradient(circle, rgba(18,161,80,0.14), transparent 70%);
+    border-radius:24px;
+  }
+  .amount-label{font-family:var(--sans); font-weight:700; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--green-deep); margin-bottom:4px;}
+  .amount{
+    font-family:var(--display); font-weight:700; font-size:56px; color:var(--ink); letter-spacing:-0.02em; line-height:1;
+    text-shadow:0 0 24px rgba(56,216,117,0.5);
+    animation:pulseGlow 1.8s ease-in-out infinite;
+  }
+  @keyframes pulseGlow{0%,100%{text-shadow:0 0 20px rgba(56,216,117,0.4);} 50%{text-shadow:0 0 38px rgba(56,216,117,0.8);}}
+  .sparkle{position:absolute; font-size:19px; animation:twinkle 1.6s ease-in-out infinite;}
+  .sp1{top:6px; left:14%; animation-delay:.1s;} .sp2{top:16px; right:12%; animation-delay:.5s;}
+  .sp3{bottom:10px; left:20%; animation-delay:.9s;} .sp4{bottom:6px; right:18%; animation-delay:1.3s;}
+  @keyframes twinkle{0%,100%{opacity:.3; transform:scale(.8);} 50%{opacity:1; transform:scale(1.15);}}
+
+  .urgency-line{text-align:center; font-family:var(--sans); font-weight:700; font-size:14px; color:var(--coral); margin:14px 0 4px;}
+
+  .timer-shell{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    background:linear-gradient(180deg,#EAFBF1,#D7F5E3); border-radius:14px; padding:12px 16px; margin:12px 0 4px;
+  }
+  .timer-label{font-family:var(--sans); font-weight:700; font-size:11.5px; color:var(--green-deep);}
+  .timer-digits{font-family:var(--display); font-size:20px; font-weight:700; color:var(--ink); letter-spacing:.03em;}
+
+  .cta-glow{
+    width:100%; margin-top:20px; border:none; cursor:pointer; position:relative; overflow:hidden;
+    font-family:var(--display); font-weight:700; font-size:17px; color:#fff;
+    text-decoration:none; box-sizing:border-box;
+    background:linear-gradient(180deg,var(--green-bright),var(--green-deep));
+    padding:18px 20px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 14px 30px -10px rgba(11,122,60,0.6);
+    animation:ctaPulse 1.7s ease-in-out infinite;
+  }
+  @keyframes ctaPulse{0%,100%{box-shadow:0 14px 30px -10px rgba(11,122,60,0.6);} 50%{box-shadow:0 14px 40px -6px rgba(11,122,60,0.9);}}
+  .cta-glow::after{
+    content:""; position:absolute; top:0; left:-60%; width:40%; height:100%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+    transform:skewX(-20deg); animation:shine 2.4s ease-in-out infinite;
+  }
+  @keyframes shine{0%{left:-60%;} 45%{left:130%;} 100%{left:130%;}}
+
+  .trust-grid{display:flex; flex-direction:column; gap:9px; margin:20px 0 4px;}
+  .trust-item{display:flex; align-items:flex-start; gap:10px; font-size:13px; font-weight:500; color:var(--ink-70);}
+  .trust-item .check{flex-shrink:0; width:18px; height:18px; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; margin-top:1px;}
+
+  .fine-print{max-width:480px; margin:20px auto 0; padding:0 18px; font-size:10.5px; line-height:1.6; color:var(--ink-45); text-align:center;}
+
+  .step{display:none;}
+  .step.active{display:block; animation:stepIn .35s ease;}
+  @keyframes stepIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  @media (max-width:400px){
+    .hero h1{font-size:26px;}
+    h2{font-size:20px;}
+    .amount{font-size:44px;}
+    .meter-value .num{font-size:38px;}
+    .big-tap .badge{width:44px; height:44px; font-size:22px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="bug">$</span>Solar Refund Check</div>
+    <div class="dot-steps" id="dotSteps">
+      <span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+
+  <!-- STEP 0 : HERO (promise headline) + SLIDER -->
+  <section class="step active" data-step="0">
+    <div class="hero">
+      <div class="hero-eyebrow">💚 2026 Solar Homeowner Program</div>
+      <h1>Get Back <span class="accent">Up To $30,000</span> For What You Overpaid On Solar.</h1>
+      <p>Homeowners across the U.S. are claiming refunds on unfair solar contracts. See your amount in under 60 seconds.</p>
+      <div class="hero-trust">
+        <span>✅ Free to check</span>
+        <span>✅ No obligation</span>
+        <span>✅ 60 seconds</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-kicker">Quick check · 1 of 3</div>
+      <h2>What's your average solar payment?</h2>
+      <p class="lede">Just slide — takes 2 seconds.</p>
+
+      <div class="meter-value">
+        <span class="sym">$</span><span class="num" id="sliderNum">180</span><span class="per">/mo</span>
+      </div>
+      <div class="slider-track-shell">
+        <div class="track-base"><div class="track-fill" id="trackFill"></div></div>
+        <input type="range" id="paySlider" min="0" max="400" step="5" value="180" aria-label="Monthly solar payment">
+      </div>
+      <div class="scale-labels"><span>$0</span><span>$400+</span></div>
+
+      <div class="reaction" id="sliderReaction"><span class="spark">💰</span><span id="sliderReactionText"></span></div>
+
+      <button class="cta" id="sliderContinue">Continue <span>→</span></button>
+      <div class="micro-trust">🔒 Free &nbsp;·&nbsp; No signup needed</div>
+    </div>
+  </section>
+
+  <!-- STEP 1 : Q1 -->
+  <section class="step" data-step="1">
+    <div class="card">
+      <div class="back-row"><button class="back-btn" data-back>← Back</button></div>
+      <div class="card-kicker">Quick check · 2 of 3</div>
+      <h2>Do you still have solar panels on your roof?</h2>
+      <p class="lede">One tap 👇</p>
+      <div class="big-tap-row" data-question="hasPanels">
+        <button class="big-tap" data-value="Yes"><span class="badge">🏠</span><span class="label">Yes</span></button>
+        <button class="big-tap" data-value="No"><span class="badge">🚫</span><span class="label">No</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2 : Q2 -->
+  <section class="step" data-step="2">
+    <div class="card">
+      <div class="back-row"><button class="back-btn" data-back>← Back</button></div>
+      <div class="card-kicker">Quick check · 3 of 3</div>
+      <h2>Is the home yours?</h2>
+      <p class="lede">One tap 👇</p>
+      <div class="big-tap-row" data-question="isOwner">
+        <button class="big-tap" data-value="Yes"><span class="badge">🏡</span><span class="label">I own it</span></button>
+        <button class="big-tap" data-value="No"><span class="badge">🙅</span><span class="label">I rent</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 3 : LOADER -->
+  <section class="step" data-step="3">
+    <div class="card">
+      <div class="loader-wrap">
+        <div class="pct-ring-shell">
+          <svg class="pct-ring" viewBox="0 0 120 120">
+            <circle class="pct-track" cx="60" cy="60" r="52"></circle>
+            <circle class="pct-bar" id="pctBar" cx="60" cy="60" r="52"></circle>
+          </svg>
+          <div class="pct-num" id="pctNum">0%</div>
+        </div>
+        <h2 style="font-size:18px; margin-top:16px;">Finding your best offer…</h2>
+        <div class="check-list">
+          <div class="check-row" id="chk0"><span class="dot"></span>Verifying homeowner status</div>
+          <div class="check-row" id="chk1"><span class="dot"></span>Matching your solar program</div>
+          <div class="check-row" id="chk2"><span class="dot"></span>Calculating your amount</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 4 : REVEAL -->
+  <section class="step" data-step="4">
+    <div class="card">
+      <div class="back-row"></div>
+      <div class="badge-burst">🎉 Great news!</div>
+      <h2 class="congrats-h" style="font-size:23px;">CONGRATULATIONS!</h2>
+      <p class="reveal-lede">You qualify for</p>
+
+      <div class="amount-shell">
+        <span class="sparkle sp1">✨</span><span class="sparkle sp2">✨</span>
+        <span class="sparkle sp3">⭐</span><span class="sparkle sp4">✨</span>
+        <div class="amount-label">Total qualified amount</div>
+        <div class="amount">$30,000</div>
+      </div>
+
+      <p class="urgency-line">⏰ But you must claim it today</p>
+
+      <div class="timer-shell">
+        <span class="timer-label">Offer expires in</span>
+        <span class="timer-digits" id="countdown">10:00</span>
+      </div>
+
+      <a class="cta-glow" id="finalCta" href="https://go.pointclickpixel.com/click">Claim My $30,000 <span>→</span></a>
+      <div class="micro-trust">🔒 Free to claim &nbsp;·&nbsp; Takes under 2 minutes</div>
+
+      <div class="trust-grid">
+        <div class="trust-item"><span class="check">✓</span>No cost or obligation to claim</div>
+        <div class="trust-item"><span class="check">✓</span>Just follow 3 easy steps on the next page</div>
+        <div class="trust-item"><span class="check">✓</span>Thousands of homeowners already claimed theirs</div>
+      </div>
+    </div>
+  </section>
+
+  <p class="fine-print">
+    Not a government program. Not affiliated with the U.S. Department of Energy or any state agency. Estimated amount is illustrative and based on figures reported by homeowners in similar situations — actual eligibility and any recovered amount, if any, vary by contract, installer, and state, and are not guaranteed. This site connects you with independent, third-party solar review specialists and may receive compensation for doing so.
+  </p>
+</div>
+
+<div class="confetti-layer" id="confettiLayer"></div>
+
+<script>
+(function(){
+  const steps = Array.from(document.querySelectorAll('.step'));
+  const dots = Array.from(document.querySelectorAll('#dotSteps .d'));
+  let current = 0;
+  let answers = { payment:180, hasPanels:null, isOwner:null };
+
+  const params = new URLSearchParams(window.location.search);
+  const clickParams = params.toString();
+
+  function goTo(index){
+    steps.forEach(s => s.classList.remove('active'));
+    steps.find(s => s.dataset.step == index).classList.add('active');
+    current = index;
+    dots.forEach((d,i)=> d.classList.toggle('on', i <= Math.min(index,3)));
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(index === 3) runLoader();
+    if(index === 4) runReveal();
+  }
+
+  document.querySelectorAll('[data-back]').forEach(btn=>{
+    btn.addEventListener('click', ()=> goTo(Math.max(0, current - 1)));
+  });
+
+  // ---- STEP 0: slider ----
+  const slider = document.getElementById('paySlider');
+  const sliderNum = document.getElementById('sliderNum');
+  const trackFill = document.getElementById('trackFill');
+  const reactionBox = document.getElementById('sliderReaction');
+  const reactionText = document.getElementById('sliderReactionText');
+  const sliderContinue = document.getElementById('sliderContinue');
+
+  function reactionFor(v){
+    if(v < 100) return {text:"Even at that level, many homeowners find they're overpaying.", hot:false};
+    if(v < 200) return {text:`$${v}/mo? Homeowners at that level are most likely to qualify.`, hot:false};
+    if(v < 300) return {text:`$${v}/mo is higher than most new solar buyers pay — good sign!`, hot:true};
+    return {text:`$${v}/mo? That's a lot of sunlight to pay for. Let's fix that.`, hot:true};
+  }
+
+  function updateSlider(v){
+    sliderNum.textContent = v;
+    const pct = (v/400)*100;
+    trackFill.style.width = pct + '%';
+    const r = reactionFor(Number(v));
+    reactionText.textContent = r.text;
+    reactionBox.classList.toggle('hot', r.hot);
+    reactionBox.classList.add('show');
+  }
+  updateSlider(slider.value);
+  slider.addEventListener('input', e => { updateSlider(e.target.value); answers.payment = Number(e.target.value); });
+  sliderContinue.addEventListener('click', ()=> goTo(1));
+
+  // ---- STEPS 1-2: tap questions ----
+  document.querySelectorAll('.big-tap-row').forEach(row=>{
+    const q = row.dataset.question;
+    row.querySelectorAll('.big-tap').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        row.querySelectorAll('.big-tap').forEach(o=>o.classList.remove('selected'));
+        btn.classList.add('selected');
+        answers[q] = btn.dataset.value;
+        setTimeout(()=>{
+          if(q === 'hasPanels') goTo(2);
+          if(q === 'isOwner') goTo(3);
+        }, 320);
+      });
+    });
+  });
+
+  // ---- STEP 3: loader (percentage ring + checklist) ----
+  function runLoader(){
+    const pctBar = document.getElementById('pctBar');
+    const pctNum = document.getElementById('pctNum');
+    const circumference = 326.7;
+    const checks = [document.getElementById('chk0'), document.getElementById('chk1'), document.getElementById('chk2')];
+    checks.forEach(c => c.classList.remove('done'));
+    pctBar.style.stroke = 'var(--green)';
+
+    let pct = 0;
+    const totalMs = 2200;
+    const stepMs = 30;
+    const increment = 100 / (totalMs / stepMs);
+
+    const iv = setInterval(()=>{
+      pct = Math.min(100, pct + increment);
+      const offset = circumference - (pct/100) * circumference;
+      pctBar.style.strokeDashoffset = offset;
+      pctNum.textContent = Math.round(pct) + '%';
+
+      if(pct >= 34 && !checks[0].classList.contains('done')) checks[0].classList.add('done');
+      if(pct >= 67 && !checks[1].classList.contains('done')) checks[1].classList.add('done');
+      if(pct >= 99 && !checks[2].classList.contains('done')){
+        checks[2].classList.add('done');
+        pctBar.style.stroke = 'var(--green-bright)';
+      }
+
+      if(pct >= 100){
+        clearInterval(iv);
+        setTimeout(()=> goTo(4), 450);
+      }
+    }, stepMs);
+  }
+
+  // ---- STEP 4: reveal + confetti ----
+  let revealed = false;
+  function runReveal(){
+    if(revealed) return;
+    revealed = true;
+    fireConfetti();
+    startCountdown(10*60);
+
+    const cta = document.getElementById('finalCta');
+    const dest = new URLSearchParams(clickParams);
+    dest.set('payment', answers.payment);
+    dest.set('hasPanels', answers.hasPanels || '');
+    dest.set('isOwner', answers.isOwner || '');
+    dest.set('amount', 30000);
+    // Base offer URL — query params (RedTrack clickid + quiz answers) are appended below.
+    // This stays a real <a href>, not a JS redirect, so RedTrack can register the click normally.
+    cta.href = 'https://go.pointclickpixel.com/click?' + dest.toString();
+  }
+
+  function fireConfetti(){
+    const layer = document.getElementById('confettiLayer');
+    const colors = ['#12A150','#38D875','#F2B705','#0B7A3C','#FFFFFF'];
+    const count = 60;
+    for(let i=0;i<count;i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      const size = 6 + Math.random()*7;
+      piece.style.width = size + 'px';
+      piece.style.height = (size*0.4 + 4) + 'px';
+      piece.style.left = Math.random()*100 + 'vw';
+      piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+      piece.style.animationDuration = (2.4 + Math.random()*1.8) + 's';
+      piece.style.animationDelay = (Math.random()*0.6) + 's';
+      layer.appendChild(piece);
+      setTimeout(()=>piece.remove(), 5000);
+    }
+  }
+
+  function startCountdown(seconds){
+    const el = document.getElementById('countdown');
+    let remaining = seconds;
+    function render(){
+      const m = String(Math.floor(remaining/60)).padStart(2,'0');
+      const s = String(remaining%60).padStart(2,'0');
+      el.textContent = `${m}:${s}`;
+    }
+    render();
+    const iv = setInterval(()=>{
+      remaining--;
+      if(remaining < 0){ clearInterval(iv); return; }
+      render();
+    }, 1000);
+  }
+})();
+</script>
+</body>
+</html>
