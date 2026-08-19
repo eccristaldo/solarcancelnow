@@ -447,12 +447,6 @@
     fireConfetti();
     startCountdown(10*60);
 
-    const sysRow = document.createElement('div');
-    sysRow.className = 'sys-note';
-    sysRow.textContent = "Not a government program. Not affiliated with the U.S. Department of Energy or any state agency. Estimated amount is illustrative and based on figures reported by homeowners in similar situations. Actual eligibility and any recovered amount, if any, vary by contract, installer, and state, and are not guaranteed. This site connects you with independent, third-party solar review specialists and may receive compensation for doing so.";
-    transcript.appendChild(sysRow);
-    scrollBottom();
-
     // pinned CTA
     const dest = new URLSearchParams(clickParams);
     dest.set('payment', answers.payment);
