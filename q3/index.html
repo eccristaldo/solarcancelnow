@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Solar Cash Back Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#12A150;
+    --green-deep:#0B7A3C;
+    --green-bright:#38D875;
+    --mint:#E4F8EC;
+    --bg:#EAF3EC;
+    --bot-bubble:#FFFFFF;
+    --gold:#F2B705;
+    --coral:#FF6B57;
+    --ink:#0E1F17;
+    --ink-70: rgba(14,31,23,0.72);
+    --ink-45: rgba(14,31,23,0.45);
+    --line:#DCEEE2;
+    --display:'Space Grotesk','Inter',sans-serif;
+    --sans:'Inter',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:var(--sans); color:var(--ink);
+    background:
+      radial-gradient(circle, rgba(18,161,80,0.06) 1px, transparent 1.4px) 0 0/22px 22px,
+      var(--bg);
+    height:100dvh; display:flex; justify-content:center; overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  .phone{
+    width:100%; max-width:480px; height:100%; display:flex; flex-direction:column;
+    background:transparent; position:relative;
+  }
+
+  /* ---------- header ---------- */
+  .chat-header{
+    flex-shrink:0; display:flex; align-items:center; gap:12px;
+    background:linear-gradient(180deg,var(--green),var(--green-deep));
+    color:#fff; padding:14px 16px; box-shadow:0 4px 14px rgba(11,122,60,0.25); z-index:10;
+  }
+  .chat-header .back{font-size:20px; opacity:.9;}
+  .chat-header .avatar{
+    width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.18);
+    display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0;
+  }
+  .chat-header .who{display:flex; flex-direction:column; gap:1px;}
+  .chat-header .name{font-family:var(--display); font-weight:700; font-size:15px;}
+  .chat-header .status{font-size:11.5px; opacity:.85; display:flex; align-items:center; gap:5px;}
+  .chat-header .status .pulse{width:7px; height:7px; border-radius:50%; background:#7CFFA6; box-shadow:0 0 0 rgba(124,255,166,0.6); animation:pulseDot 1.8s infinite;}
+  @keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(124,255,166,0.6);}70%{box-shadow:0 0 0 7px rgba(124,255,166,0);}100%{box-shadow:0 0 0 0 rgba(124,255,166,0);}}
+
+  /* ---------- transcript ---------- */
+  .transcript{
+    flex:1; overflow-y:auto; padding:16px 14px 22px; display:flex; flex-direction:column; gap:10px;
+    scroll-behavior:smooth;
+  }
+  .row{display:flex; width:100%;}
+  .row.bot{justify-content:flex-start;}
+  .row.user{justify-content:flex-end;}
+
+  .bubble{
+    max-width:82%; padding:11px 14px; font-size:14.5px; line-height:1.45; font-weight:500;
+    box-shadow:0 2px 6px rgba(14,31,23,0.06); animation:bubbleIn .28s ease;
+  }
+  @keyframes bubbleIn{from{opacity:0; transform:translateY(6px) scale(.98);} to{opacity:1; transform:translateY(0) scale(1);}}
+  .bubble.bot{background:var(--bot-bubble); color:var(--ink); border-radius:4px 16px 16px 16px;}
+  .bubble.user{background:linear-gradient(180deg,var(--green),var(--green-deep)); color:#fff; border-radius:16px 4px 16px 16px;}
+
+  .typing-bubble{
+    background:var(--bot-bubble); border-radius:4px 16px 16px 16px; padding:12px 16px;
+    display:flex; align-items:center; gap:4px; width:fit-content; box-shadow:0 2px 6px rgba(14,31,23,0.06);
+    animation:bubbleIn .2s ease;
+  }
+  .typing-bubble .td{width:6px; height:6px; border-radius:50%; background:var(--ink-45); animation:tbounce 1.1s infinite;}
+  .typing-bubble .td:nth-child(2){animation-delay:.15s;}
+  .typing-bubble .td:nth-child(3){animation-delay:.3s;}
+  @keyframes tbounce{0%,60%,100%{transform:translateY(0); opacity:.5;} 30%{transform:translateY(-4px); opacity:1;}}
+
+  /* ---------- reveal card bubble ---------- */
+  .reveal-card{
+    max-width:94%; width:100%; background:var(--bot-bubble); border-radius:4px 18px 18px 18px;
+    padding:20px 18px 18px; box-shadow:0 8px 24px -8px rgba(14,31,23,0.18); animation:bubbleIn .3s ease;
+    text-align:center; position:relative; overflow:hidden;
+  }
+  .badge-burst{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    font-family:var(--display); font-weight:700; font-size:13px; color:var(--green-deep);
+    background:var(--mint); border:1px solid rgba(18,161,80,0.22); border-radius:999px; padding:7px 14px; margin:0 auto 12px; width:fit-content;
+    animation:bounceIn .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes bounceIn{0%{opacity:0; transform:scale(.4);} 60%{opacity:1; transform:scale(1.08);} 100%{transform:scale(1);}}
+  .congrats-h{font-family:var(--display); font-weight:700; font-size:20px; color:var(--ink); margin:0 0 4px;}
+  .reveal-lede{font-size:13.5px; color:var(--ink-70); margin:0 0 4px;}
+  .amount-shell{margin:10px 0 6px; position:relative; padding:16px 6px;
+    background:radial-gradient(circle, rgba(56,216,117,0.16), transparent 70%); border-radius:20px;}
+  .amount-label{font-family:var(--sans); font-weight:700; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--green-deep); margin-bottom:2px;}
+  .amount{
+    font-family:var(--display); font-weight:700; font-size:44px; color:var(--ink); letter-spacing:-0.02em; line-height:1;
+    text-shadow:0 0 22px rgba(56,216,117,0.5); animation:pulseGlow 1.8s ease-in-out infinite;
+  }
+  @keyframes pulseGlow{0%,100%{text-shadow:0 0 18px rgba(56,216,117,0.4);} 50%{text-shadow:0 0 34px rgba(56,216,117,0.8);}}
+  .sparkle{position:absolute; font-size:16px; animation:twinkle 1.6s ease-in-out infinite;}
+  .sp1{top:2px; left:12%; animation-delay:.1s;} .sp2{top:10px; right:10%; animation-delay:.5s;}
+  .sp3{bottom:6px; left:18%; animation-delay:.9s;} .sp4{bottom:2px; right:16%; animation-delay:1.3s;}
+  @keyframes twinkle{0%,100%{opacity:.3; transform:scale(.8);} 50%{opacity:1; transform:scale(1.15);}}
+  .urgency-line{font-family:var(--sans); font-weight:700; font-size:13px; color:var(--coral); margin:8px 0 2px;}
+  .timer-shell{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--mint); border-radius:12px; padding:9px 12px; margin:10px 0 2px;
+  }
+  .timer-label{font-family:var(--sans); font-weight:700; font-size:11px; color:var(--green-deep);}
+  .timer-digits{font-family:var(--display); font-size:16px; font-weight:700; color:var(--ink);}
+
+  .sys-note{
+    text-align:center; font-size:10px; line-height:1.6; color:var(--ink-45); max-width:88%;
+    margin:14px auto 4px; padding-top:12px; border-top:1px solid var(--line);
+  }
+
+  /* ---------- confetti ---------- */
+  .confetti-layer{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:60;}
+  .confetti-piece{position:absolute; top:-20px; border-radius:2px; opacity:0; animation:fall linear forwards;}
+  @keyframes fall{0%{opacity:1; transform:translateY(0) rotate(0deg);} 100%{opacity:.9; transform:translateY(110vh) rotate(600deg);}}
+
+  .inline-block{
+    max-width:88%; background:var(--bot-bubble); border-radius:4px 16px 16px 16px;
+    padding:14px 14px 12px; box-shadow:0 2px 6px rgba(14,31,23,0.06); animation:bubbleIn .25s ease;
+  }
+  .inline-block .chip-row{display:flex; gap:10px;}
+  .inline-block .chip-btn{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:7px;
+    border:2px solid var(--line); background:#fff; border-radius:13px; padding:13px 8px; cursor:pointer;
+    font-family:var(--display); font-weight:700; font-size:14px; color:var(--ink); transition:all .15s;
+  }
+  .inline-block .chip-btn:hover{border-color:var(--green-bright);}
+  .inline-block .chip-btn:active{transform:scale(.96); background:var(--mint); border-color:var(--green);}
+  .inline-block .chip-btn .ic{font-size:18px;}
+  .inline-block .start-btn{
+    width:100%; border:none; cursor:pointer; font-family:var(--display); font-weight:700; font-size:15px; color:#fff;
+    background:linear-gradient(180deg,var(--green),var(--green-deep)); padding:13px 16px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 8px 18px -8px rgba(11,122,60,0.5);
+  }
+
+  /* ---------- composer (only used for the final pinned CTA now) ---------- */
+  .composer{
+    flex-shrink:0; background:#fff; max-height:0; overflow:hidden;
+    padding:0 14px; border-top:0 solid var(--line); z-index:10;
+    transition:max-height .25s ease, padding .25s ease;
+  }
+  .composer.active{
+    max-height:160px; padding:12px 14px calc(12px + env(safe-area-inset-bottom)); border-top-width:1px;
+  }
+  .composer-inner{max-width:480px; margin:0 auto;}
+
+  .start-btn, .cta-btn{
+    width:100%; border:none; cursor:pointer; text-decoration:none; box-sizing:border-box;
+    font-family:var(--display); font-weight:700; font-size:16px; color:#fff;
+    background:linear-gradient(180deg,var(--green),var(--green-deep));
+    padding:15px 18px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 10px 22px -8px rgba(11,122,60,0.5);
+  }
+  .cta-btn{
+    background:linear-gradient(180deg,var(--green-bright),var(--green-deep));
+    position:relative; overflow:hidden; font-size:17px; padding:17px 18px;
+    animation:ctaPulse 1.7s ease-in-out infinite;
+  }
+  @keyframes ctaPulse{0%,100%{box-shadow:0 10px 22px -8px rgba(11,122,60,0.5);} 50%{box-shadow:0 14px 32px -6px rgba(11,122,60,0.85);}}
+  .cta-btn::after{
+    content:""; position:absolute; top:0; left:-60%; width:40%; height:100%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+    transform:skewX(-20deg); animation:shine 2.4s ease-in-out infinite;
+  }
+  @keyframes shine{0%{left:-60%;} 45%{left:130%;} 100%{left:130%;}}
+  .composer-sub{text-align:center; font-size:11px; font-weight:600; color:var(--ink-45); margin-top:8px;}
+
+  .chip-row{display:flex; gap:10px;}
+  .chip-btn{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:8px;
+    border:2px solid var(--line); background:#fff; border-radius:14px; padding:14px 10px; cursor:pointer;
+    font-family:var(--display); font-weight:700; font-size:14.5px; color:var(--ink); transition:all .15s;
+  }
+  .chip-btn:hover{border-color:var(--green-bright);}
+  .chip-btn:active{transform:scale(.97); background:var(--mint); border-color:var(--green);}
+  .chip-btn .ic{font-size:19px;}
+
+  .slider-composer{width:min(280px, 76vw);}
+  .slider-composer .meter-value{display:flex; align-items:baseline; justify-content:center; gap:2px; font-family:var(--display); font-weight:700; margin-bottom:6px;}
+  .slider-composer .sym{font-size:17px; color:var(--ink-45);}
+  .slider-composer .num{font-size:30px; color:var(--green-deep);}
+  .slider-composer .per{font-size:12px; color:var(--ink-45); align-self:flex-end; margin-bottom:6px; font-weight:600;}
+  .slide-send-row{display:flex; align-items:center; gap:10px;}
+  .track-wrap{flex:1; position:relative; height:34px; display:flex; align-items:center;}
+  .track-base{width:100%; height:12px; border-radius:8px; background:var(--line); border:1px solid #CFE8D8; overflow:hidden;}
+  .track-fill{height:100%; width:45%; border-radius:8px; background:linear-gradient(90deg,var(--green),var(--gold));}
+  input[type=range]{
+    -webkit-appearance:none; appearance:none; width:100%; height:34px; background:transparent;
+    position:absolute; top:0; left:0; margin:0; cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-runnable-track{height:34px; background:transparent;}
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none; width:26px; height:26px; border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, #fff, var(--green-bright) 55%, var(--green-deep));
+    border:3px solid #fff; box-shadow:0 4px 10px rgba(11,122,60,0.45); cursor:grab; margin-top:0;
+  }
+  .send-btn{
+    flex-shrink:0; width:44px; height:44px; border-radius:50%; border:none; cursor:pointer;
+    background:linear-gradient(180deg,var(--green),var(--green-deep)); color:#fff; font-size:18px;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 6px 14px -4px rgba(11,122,60,0.5);
+  }
+  .scale-labels{display:flex; justify-content:space-between; font-size:10.5px; font-weight:600; color:var(--ink-45); margin-top:6px;}
+
+  @media (max-width:400px){
+    .amount{font-size:38px;}
+    .congrats-h{font-size:18px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="chat-header">
+    <span class="back">‹</span>
+    <div class="avatar">🌞</div>
+    <div class="who">
+      <div class="name">Ava · Solar Relief Advisor</div>
+      <div class="status"><span class="pulse"></span>Online now</div>
+    </div>
+  </div>
+
+  <div class="transcript" id="transcript"></div>
+
+  <div class="composer" id="composer">
+    <div class="composer-inner" id="composerInner"></div>
+  </div>
+</div>
+
+<div class="confetti-layer" id="confettiLayer"></div>
+
+<script>
+(function(){
+  const transcript = document.getElementById('transcript');
+  const composer = document.getElementById('composer');
+  const composerInner = document.getElementById('composerInner');
+  const params = new URLSearchParams(window.location.search);
+  const clickParams = params.toString();
+  let answers = { payment:180, hasPanels:null, isOwner:null };
+
+  function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+  function scrollBottom(){ transcript.scrollTop = transcript.scrollHeight + 200; }
+
+  function addUserMessage(text){
+    const row = document.createElement('div');
+    row.className = 'row user';
+    row.innerHTML = `<div class="bubble user">${text}</div>`;
+    transcript.appendChild(row);
+    scrollBottom();
+  }
+
+  async function botSay(text, delay){
+    const typingRow = document.createElement('div');
+    typingRow.className = 'row bot';
+    typingRow.innerHTML = `<div class="typing-bubble"><span class="td"></span><span class="td"></span><span class="td"></span></div>`;
+    transcript.appendChild(typingRow);
+    scrollBottom();
+    await sleep(delay || 750);
+    typingRow.remove();
+    const row = document.createElement('div');
+    row.className = 'row bot';
+    row.innerHTML = `<div class="bubble bot">${text}</div>`;
+    transcript.appendChild(row);
+    scrollBottom();
+    await sleep(200);
+  }
+
+  function reactionFor(v){
+    if(v < 100) return "Even at that level, many homeowners find they're overpaying.";
+    if(v < 200) return `$${v}/mo? Homeowners at that level are most likely to qualify.`;
+    if(v < 300) return `$${v}/mo is higher than most new solar buyers pay, good sign!`;
+    return `$${v}/mo? That's a lot of sunlight to pay for. Let's fix that.`;
+  }
+
+  function clearComposer(){ composerInner.innerHTML = ''; composer.classList.remove('active'); }
+
+  function waitForStart(){
+    return new Promise(resolve=>{
+      const row = document.createElement('div');
+      row.className = 'row bot';
+      row.innerHTML = `<div class="inline-block"><button class="start-btn" id="startBtn">Let's check my amount →</button><div class="composer-sub" style="margin-top:8px;">🔒 Free · No signup needed</div></div>`;
+      transcript.appendChild(row);
+      scrollBottom();
+      row.querySelector('#startBtn').addEventListener('click', ()=>{ row.remove(); resolve(); });
+    });
+  }
+
+  function waitForSliderSend(){
+    return new Promise(resolve=>{
+      const row = document.createElement('div');
+      row.className = 'row bot';
+      row.innerHTML = `
+        <div class="inline-block">
+          <div class="slider-composer">
+            <div class="meter-value"><span class="sym">$</span><span class="num" id="sliderNum">180</span><span class="per">/mo</span></div>
+            <div class="slide-send-row">
+              <div class="track-wrap">
+                <div class="track-base"><div class="track-fill" id="trackFill"></div></div>
+                <input type="range" id="paySlider" min="0" max="400" step="5" value="180" aria-label="Monthly solar payment">
+              </div>
+              <button class="send-btn" id="sendBtn" aria-label="Send">➤</button>
+            </div>
+            <div class="scale-labels"><span>$0</span><span>$400+</span></div>
+          </div>
+        </div>`;
+      transcript.appendChild(row);
+      scrollBottom();
+      const slider = row.querySelector('#paySlider');
+      const num = row.querySelector('#sliderNum');
+      const fill = row.querySelector('#trackFill');
+      slider.addEventListener('input', e=>{
+        num.textContent = e.target.value;
+        fill.style.width = (e.target.value/400*100) + '%';
+      });
+      row.querySelector('#sendBtn').addEventListener('click', ()=>{
+        const val = Number(slider.value);
+        row.remove();
+        resolve(val);
+      });
+    });
+  }
+
+  function waitForChip(options){
+    return new Promise(resolve=>{
+      const row = document.createElement('div');
+      row.className = 'row bot';
+      row.innerHTML = `<div class="inline-block"><div class="chip-row">${
+        options.map(o=>`<button class="chip-btn" data-value="${o.value}"><span class="ic">${o.icon}</span>${o.label}</button>`).join('')
+      }</div></div>`;
+      transcript.appendChild(row);
+      scrollBottom();
+      row.querySelectorAll('.chip-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{ row.remove(); resolve(btn.dataset.value); });
+      });
+    });
+  }
+
+  function fireConfetti(){
+    const layer = document.getElementById('confettiLayer');
+    const colors = ['#12A150','#38D875','#F2B705','#0B7A3C','#FFFFFF'];
+    for(let i=0;i<60;i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      const size = 6 + Math.random()*7;
+      piece.style.width = size + 'px';
+      piece.style.height = (size*0.4 + 4) + 'px';
+      piece.style.left = Math.random()*100 + 'vw';
+      piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+      piece.style.animationDuration = (2.4 + Math.random()*1.8) + 's';
+      piece.style.animationDelay = (Math.random()*0.6) + 's';
+      layer.appendChild(piece);
+      setTimeout(()=>piece.remove(), 5000);
+    }
+  }
+
+  function startCountdown(seconds){
+    const el = document.getElementById('countdown');
+    let remaining = seconds;
+    function render(){
+      const m = String(Math.floor(remaining/60)).padStart(2,'0');
+      const s = String(remaining%60).padStart(2,'0');
+      if(el) el.textContent = `${m}:${s}`;
+    }
+    render();
+    const iv = setInterval(()=>{
+      remaining--;
+      if(remaining < 0){ clearInterval(iv); return; }
+      render();
+    }, 1000);
+  }
+
+  async function run(){
+    await sleep(500);
+    await botSay("Hey there! 👋 I'm Ava, your solar savings assistant.");
+    await botSay("I can check if you're owed solar payment compensation. Takes about 60 seconds. Ready?");
+    await waitForStart();
+    addUserMessage("Let's check →");
+
+    await botSay("First, what's your average solar payment?");
+    const payment = await waitForSliderSend();
+    answers.payment = payment;
+    addUserMessage(`$${payment}/mo`);
+    await botSay(reactionFor(payment));
+
+    await botSay("Quick one, do you still have solar panels on your roof?");
+    const hasPanels = await waitForChip([
+      {label:'Yes', icon:'🏠', value:'Yes'},
+      {label:'No', icon:'🚫', value:'No'}
+    ]);
+    answers.hasPanels = hasPanels;
+    addUserMessage(hasPanels === 'Yes' ? '🏠 Yes' : '🚫 No');
+
+    await botSay("Got it. And is the home yours?");
+    const isOwner = await waitForChip([
+      {label:'I own it', icon:'🏡', value:'Yes'},
+      {label:'I rent', icon:'🙅', value:'No'}
+    ]);
+    answers.isOwner = isOwner;
+    addUserMessage(isOwner === 'Yes' ? '🏡 I own it' : '🙅 I rent');
+
+    clearComposer();
+    await botSay("Perfect, give me a sec while I check your file 🔎", 600);
+    await botSay("✅ Verifying homeowner status…", 800);
+    await botSay("✅ Matching your solar program…", 800);
+    await botSay("✅ Calculating your amount…", 900);
+    await sleep(300);
+
+    // reveal card
+    const row = document.createElement('div');
+    row.className = 'row bot';
+    row.innerHTML = `
+      <div class="reveal-card">
+        <div class="badge-burst">🎉 Great news!</div>
+        <div class="congrats-h">CONGRATULATIONS!</div>
+        <div class="reveal-lede">You qualify for</div>
+        <div class="amount-shell">
+          <span class="sparkle sp1">✨</span><span class="sparkle sp2">✨</span>
+          <span class="sparkle sp3">⭐</span><span class="sparkle sp4">✨</span>
+          <div class="amount-label">Total qualified amount</div>
+          <div class="amount">$30,000</div>
+        </div>
+        <div class="urgency-line">⏰ But you must claim it today</div>
+        <div class="timer-shell">
+          <span class="timer-label">Offer expires in</span>
+          <span class="timer-digits" id="countdown">10:00</span>
+        </div>
+      </div>`;
+    transcript.appendChild(row);
+    scrollBottom();
+    fireConfetti();
+    startCountdown(10*60);
+
+    const sysRow = document.createElement('div');
+    sysRow.className = 'sys-note';
+    sysRow.textContent = "Not a government program. Not affiliated with the U.S. Department of Energy or any state agency. Estimated amount is illustrative and based on figures reported by homeowners in similar situations. Actual eligibility and any recovered amount, if any, vary by contract, installer, and state, and are not guaranteed. This site connects you with independent, third-party solar review specialists and may receive compensation for doing so.";
+    transcript.appendChild(sysRow);
+    scrollBottom();
+
+    // pinned CTA
+    const dest = new URLSearchParams(clickParams);
+    dest.set('payment', answers.payment);
+    dest.set('hasPanels', answers.hasPanels || '');
+    dest.set('isOwner', answers.isOwner || '');
+    dest.set('amount', 30000);
+    composerInner.innerHTML = `
+      <a class="cta-btn" id="finalCta" href="https://go.pointclickpixel.com/click?${dest.toString()}">Claim My $30,000 <span>→</span></a>
+      <div class="composer-sub">🔒 Free to claim · Takes under 2 minutes</div>`;
+    composer.classList.add('active');
+  }
+
+  run();
+})();
+</script>
+</body>
+</html>
