@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Solar Payout, Limited Spots</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0D0D0F;
+    --card:#1C1C20;
+    --red:#FF3B3F;
+    --red-deep:#C4181C;
+    --gold:#FFC93C;
+    --gold-deep:#E0A800;
+    --ink:#FFFFFF;
+    --ink-70: rgba(255,255,255,0.72);
+    --ink-45: rgba(255,255,255,0.45);
+    --line: rgba(255,255,255,0.12);
+    --display:'Archivo Black','Inter',sans-serif;
+    --sans:'Inter',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--sans); color:var(--ink);
+    background:
+      radial-gradient(circle at 10% -8%, rgba(255,59,63,0.18), transparent 42%),
+      radial-gradient(circle at 100% 100%, rgba(255,201,60,0.08), transparent 45%),
+      var(--black);
+    min-height:100vh; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+
+  /* ---------- persistent urgency bar (visible on every screen) ---------- */
+  .urgency-bar{
+    position:fixed; top:0; left:0; right:0; z-index:40;
+    background:linear-gradient(180deg,var(--red),var(--red-deep));
+    border-bottom:2px solid rgba(255,255,255,0.15);
+    padding:10px 16px; box-shadow:0 4px 20px -6px rgba(255,59,63,0.5);
+  }
+  .urgency-inner{max-width:520px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;}
+  .spots{display:flex; align-items:center; gap:6px; font-family:var(--sans); font-weight:800; font-size:12.5px; color:#fff;}
+  .spots .n{font-family:var(--display); font-size:15px; transition:transform .3s;}
+  .spots .n.flash{animation:flashNum .5s ease;}
+  @keyframes flashNum{0%{transform:scale(1); color:#fff;} 40%{transform:scale(1.3); color:var(--gold);} 100%{transform:scale(1); color:#fff;}}
+  .u-timer{display:flex; align-items:center; gap:6px; font-family:var(--sans); font-weight:800; font-size:12.5px; color:#fff;}
+  .u-timer .digits{font-family:var(--display); font-size:14px; letter-spacing:.02em;}
+
+  /* ---------- screen shell ---------- */
+  .screen{
+    display:none; min-height:100vh; min-height:100dvh;
+    flex-direction:column; align-items:center; justify-content:center;
+    padding:78px 20px 56px; text-align:center;
+  }
+  .screen.active{display:flex; animation:screenIn .4s ease;}
+  @keyframes screenIn{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+  .wrap{max-width:480px; width:100%;}
+  .q-kicker{font-family:var(--sans); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:10px;}
+
+  h1{
+    font-family:var(--display); font-weight:400; font-size:27px; line-height:1.28; margin:0 0 12px; color:var(--ink);
+  }
+  h1 .accent{color:var(--gold);}
+  .lede{font-size:14.5px; line-height:1.55; color:var(--ink-70); margin:0 0 26px; font-weight:500;}
+
+  .btn{
+    width:100%; border:none; cursor:pointer; text-decoration:none; box-sizing:border-box;
+    font-family:var(--display); font-weight:400; font-size:16px; color:#1A0000;
+    background:linear-gradient(180deg,var(--gold),var(--gold-deep));
+    padding:17px 20px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 14px 30px -10px rgba(255,201,60,0.5);
+  }
+  .micro-trust{text-align:center; font-size:11.5px; font-weight:600; color:var(--ink-45); margin-top:12px;}
+
+  /* ---------- question ---------- */
+  .q-text{font-family:var(--display); font-weight:400; font-size:21px; line-height:1.35; margin:0 0 24px; color:var(--ink);}
+  .opt-list{display:flex; flex-direction:column; gap:12px;}
+  .opt{
+    display:flex; align-items:center; gap:14px; width:100%;
+    border:1.5px solid var(--line); background:var(--card); border-radius:12px;
+    padding:18px 18px; cursor:pointer; text-align:left; transition:all .15s;
+  }
+  .opt:hover{border-color:rgba(255,201,60,0.5);}
+  .opt .badge{
+    flex-shrink:0; width:32px; height:32px; border-radius:8px; border:1.5px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-family:var(--display); font-weight:400; font-size:13px;
+    color:var(--ink-70); transition:all .15s;
+  }
+  .opt .label{flex:1; font-family:var(--sans); font-weight:700; font-size:16px; color:var(--ink);}
+  .opt .check{font-size:16px; color:transparent; transition:color .15s;}
+  .opt.selected{border-color:var(--gold); background:rgba(255,201,60,0.1); box-shadow:0 0 0 1px rgba(255,201,60,0.3) inset;}
+  .opt.selected .badge{background:var(--gold); border-color:var(--gold); color:#1A0000;}
+  .opt.selected .check{color:var(--gold);}
+
+  /* ---------- loader ---------- */
+  .pct-num{font-family:var(--display); font-weight:400; font-size:46px; color:var(--gold); text-shadow:0 0 22px rgba(255,201,60,0.5); line-height:1;}
+  .pct-num .of{font-size:18px; color:var(--ink-45); font-weight:600; font-family:var(--sans);}
+  .pct-label{font-family:var(--sans); font-weight:700; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-45); margin-top:6px;}
+  .pct-track{height:6px; border-radius:6px; background:rgba(255,255,255,0.1); overflow:hidden; margin:18px 0 26px;}
+  .pct-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--red-deep),var(--gold)); box-shadow:0 0 10px rgba(255,201,60,0.5); transition:width .1s linear;}
+  .check-list{display:flex; flex-direction:column; gap:12px; text-align:left; max-width:300px; margin:0 auto;}
+  .check-row{display:flex; align-items:center; gap:11px; font-family:var(--sans); font-weight:600; font-size:14px; color:var(--ink-45); transition:color .25s;}
+  .check-row .dot{flex-shrink:0; width:22px; height:22px; border-radius:50%; border:1.5px solid var(--line); display:flex; align-items:center; justify-content:center; transition:all .25s;}
+  .check-row.done{color:var(--ink);}
+  .check-row.done .dot{background:var(--gold); border-color:var(--gold); animation:popCheck .35s ease;}
+  .check-row.done .dot::after{content:"✓"; color:#1A0000; font-size:12px; font-weight:800;}
+  @keyframes popCheck{0%{transform:scale(.6);} 60%{transform:scale(1.2);} 100%{transform:scale(1);}}
+
+  /* ---------- reveal ---------- */
+  .badge-burst{
+    display:inline-flex; align-items:center; gap:8px; font-family:var(--sans); font-weight:800; font-size:12.5px;
+    letter-spacing:.05em; text-transform:uppercase; color:var(--gold);
+    background:rgba(255,201,60,0.1); border:1px solid rgba(255,201,60,0.3); border-radius:999px;
+    padding:8px 16px; margin-bottom:18px;
+    animation:bounceIn .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes bounceIn{0%{opacity:0; transform:scale(.4);} 60%{opacity:1; transform:scale(1.08);} 100%{transform:scale(1);}}
+  .qualify-h{font-family:var(--display); font-weight:400; font-size:28px; color:var(--ink); margin:0 0 6px;}
+  .reveal-lede{font-size:14.5px; color:var(--ink-70); margin:0 0 14px; font-weight:500;}
+
+  .amount-shell{position:relative; margin:8px 0 18px; padding:20px 10px;}
+  .amount-label{font-family:var(--sans); font-weight:700; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:6px;}
+  .amount{
+    font-family:var(--display); font-weight:400; font-size:58px; color:var(--gold); letter-spacing:-0.01em; line-height:1;
+    text-shadow:0 0 32px rgba(255,201,60,0.55); animation:pulseGlow 1.8s ease-in-out infinite;
+  }
+  @keyframes pulseGlow{0%,100%{text-shadow:0 0 24px rgba(255,201,60,0.45);} 50%{text-shadow:0 0 44px rgba(255,201,60,0.85);}}
+  .sparkle{position:absolute; font-size:19px; animation:twinkle 1.6s ease-in-out infinite;}
+  .sp1{top:0; left:10%; animation-delay:.1s;} .sp2{top:8px; right:8%; animation-delay:.5s;}
+  .sp3{bottom:4px; left:16%; animation-delay:.9s;} .sp4{bottom:0; right:14%; animation-delay:1.3s;}
+  @keyframes twinkle{0%,100%{opacity:.3; transform:scale(.8);} 50%{opacity:1; transform:scale(1.15);}}
+
+  .urgency-line{font-family:var(--sans); font-weight:700; font-size:14px; color:var(--red); margin:6px 0 16px;}
+  .timer-shell{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    background:rgba(255,59,63,0.1); border:1px solid rgba(255,59,63,0.35);
+    border-radius:12px; padding:13px 16px; margin-bottom:24px;
+  }
+  .timer-label{font-family:var(--sans); font-weight:700; font-size:11.5px; color:var(--red);}
+  .timer-digits{font-family:var(--display); font-size:19px; font-weight:400; color:var(--ink); letter-spacing:.02em;}
+
+  .cta-glow{
+    width:100%; border:none; cursor:pointer; position:relative; overflow:hidden; text-decoration:none; box-sizing:border-box;
+    font-family:var(--display); font-weight:400; font-size:17px; color:#1A0000;
+    background:linear-gradient(180deg,var(--gold),var(--gold-deep));
+    padding:19px 20px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 0 0 1px rgba(255,201,60,0.35), 0 14px 32px -8px rgba(255,201,60,0.55);
+    animation:ctaPulse 1.7s ease-in-out infinite;
+  }
+  @keyframes ctaPulse{0%,100%{box-shadow:0 0 0 1px rgba(255,201,60,0.35), 0 14px 32px -8px rgba(255,201,60,0.55);} 50%{box-shadow:0 0 0 1px rgba(255,201,60,0.5), 0 18px 42px -4px rgba(255,201,60,0.8);}}
+  .cta-glow::after{
+    content:""; position:absolute; top:0; left:-60%; width:40%; height:100%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent);
+    transform:skewX(-20deg); animation:shine 2.4s ease-in-out infinite;
+  }
+  @keyframes shine{0%{left:-60%;} 45%{left:130%;} 100%{left:130%;}}
+
+  .trust-grid{display:flex; flex-direction:column; gap:10px; margin-top:22px; text-align:left;}
+  .trust-item{display:flex; align-items:flex-start; gap:10px; font-size:13px; font-weight:500; color:var(--ink-70);}
+  .trust-item .chk{flex-shrink:0; width:18px; height:18px; border-radius:50%; background:var(--gold); color:#1A0000; display:flex; align-items:center; justify-content:center; font-size:11px; margin-top:1px; font-weight:800;}
+
+  .fine-print{max-width:480px; margin:26px auto 0; font-size:10px; line-height:1.7; color:rgba(255,255,255,0.3); text-align:center;}
+
+  /* ---------- confetti ---------- */
+  .confetti-layer{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:60;}
+  .confetti-piece{position:absolute; top:-20px; border-radius:2px; opacity:0; animation:fall linear forwards;}
+  @keyframes fall{0%{opacity:1; transform:translateY(0) rotate(0deg);} 100%{opacity:.9; transform:translateY(110vh) rotate(600deg);}}
+
+  @media (max-width:400px){
+    h1{font-size:22px;}
+    .q-text{font-size:18px;}
+    .amount{font-size:46px;}
+    .qualify-h{font-size:24px;}
+    .pct-num{font-size:38px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="urgency-bar">
+  <div class="urgency-inner">
+    <div class="spots">🔥 <span class="n" id="spotsNum">47</span> spots left today</div>
+    <div class="u-timer">⏱ <span class="digits" id="urgencyTimer">14:58</span></div>
+  </div>
+</div>
+
+<!-- SCREEN 0: HEADLINE + Q1 -->
+<section class="screen active" data-step="0">
+  <div class="wrap">
+    <h1>Only <span class="accent" id="spotsHeadline">47</span> Solar Payouts Left Today. Claim Your <span class="accent">$30,000</span> Before They're Gone.</h1>
+    <p class="lede">This offer resets daily and spots are filling fast. Answer 3 quick questions to lock in your spot.</p>
+    <p class="q-text">Do You Still Have Solar Panels On Your Roof?</p>
+    <div class="opt-list" data-question="hasPanels">
+      <button class="opt" data-value="Yes"><span class="badge">A</span><span class="label">Yes</span><span class="check">✓</span></button>
+      <button class="opt" data-value="No"><span class="badge">B</span><span class="label">No</span><span class="check">✓</span></button>
+    </div>
+    <div class="micro-trust">🔒 Free · No signup needed</div>
+  </div>
+</section>
+
+<!-- SCREEN 1: Q2 -->
+<section class="screen" data-step="1">
+  <div class="wrap">
+    <p class="q-kicker">Quick, before your spot expires</p>
+    <p class="q-text">How Long Have You Had Your Solar System?</p>
+    <div class="opt-list" data-question="systemAge">
+      <button class="opt" data-value="Less than 2 years"><span class="badge">A</span><span class="label">Less than 2 years</span><span class="check">✓</span></button>
+      <button class="opt" data-value="2+ years"><span class="badge">B</span><span class="label">2+ years</span><span class="check">✓</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- SCREEN 2: Q3 -->
+<section class="screen" data-step="2">
+  <div class="wrap">
+    <p class="q-kicker">Almost there, one more spot check</p>
+    <p class="q-text">Is The Home Yours?</p>
+    <div class="opt-list" data-question="isOwner">
+      <button class="opt" data-value="Yes"><span class="badge">A</span><span class="label">I own it</span><span class="check">✓</span></button>
+      <button class="opt" data-value="No"><span class="badge">B</span><span class="label">I rent</span><span class="check">✓</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- SCREEN 3: LOADER -->
+<section class="screen" data-step="3">
+  <div class="wrap">
+    <h1 style="font-size:19px;">Reserving Your Spot…</h1>
+    <div class="pct-wrap">
+      <div class="pct-num"><span id="pctNumText">0</span><span class="of">%</span></div>
+      <div class="pct-label">Reservation Progress</div>
+      <div class="pct-track"><div class="pct-fill" id="pctFill"></div></div>
+    </div>
+    <div class="check-list">
+      <div class="check-row" id="chk0"><span class="dot"></span>Verifying homeowner status</div>
+      <div class="check-row" id="chk1"><span class="dot"></span>Locking in your payout amount</div>
+      <div class="check-row" id="chk2"><span class="dot"></span>Confirming your spot</div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREEN 4: REVEAL -->
+<section class="screen" data-step="4">
+  <div class="wrap">
+    <div class="badge-burst">🔒 Spot Reserved</div>
+    <h1 class="qualify-h">You're In!</h1>
+    <p class="reveal-lede">You've locked in a payout of</p>
+
+    <div class="amount-shell">
+      <span class="sparkle sp1">✨</span><span class="sparkle sp2">✨</span>
+      <span class="sparkle sp3">⭐</span><span class="sparkle sp4">✨</span>
+      <div class="amount-label">Reserved payout amount</div>
+      <div class="amount">$30,000</div>
+    </div>
+
+    <p class="urgency-line" id="reservationLine">⏰ Your reservation expires in</p>
+    <div class="timer-shell">
+      <span class="timer-label">Time remaining</span>
+      <span class="timer-digits" id="countdown">05:00</span>
+    </div>
+
+    <a class="cta-glow" id="finalCta" href="https://go.digitalrouteone.com/click">Claim My $30,000 Now <span>→</span></a>
+
+    <div class="trust-grid">
+      <div class="trust-item"><span class="chk">✓</span>No cost or obligation to claim</div>
+      <div class="trust-item"><span class="chk">✓</span>Your spot is held for 5 minutes only</div>
+      <div class="trust-item"><span class="chk">✓</span>Thousands of homeowners already claimed theirs today</div>
+    </div>
+
+    <p class="fine-print">Not a government program. Not affiliated with the U.S. Department of Energy or any state agency. Estimated amount is illustrative and based on figures reported by homeowners in similar situations. Actual eligibility and any recovered amount, if any, vary by contract, installer, and state, and are not guaranteed. This site connects you with independent, third-party solar review specialists and may receive compensation for doing so.</p>
+  </div>
+</section>
+
+<div class="confetti-layer" id="confettiLayer"></div>
+
+<script>
+(function(){
+  const screens = Array.from(document.querySelectorAll('.screen'));
+  let current = 0;
+  let answers = { hasPanels:null, systemAge:null, isOwner:null };
+
+  const params = new URLSearchParams(window.location.search);
+  const clickParams = params.toString();
+
+  // ---- persistent urgency bar: spots counter + global timer ----
+  let spotsLeft = 47;
+  const spotsNumEl = document.getElementById('spotsNum');
+  const spotsHeadlineEl = document.getElementById('spotsHeadline');
+  function decrementSpots(){
+    spotsLeft = Math.max(9, spotsLeft - 1);
+    spotsNumEl.textContent = spotsLeft;
+    spotsHeadlineEl.textContent = spotsLeft;
+    spotsNumEl.classList.remove('flash');
+    void spotsNumEl.offsetWidth;
+    spotsNumEl.classList.add('flash');
+  }
+
+  let globalSeconds = 14*60 + 58;
+  const urgencyTimerEl = document.getElementById('urgencyTimer');
+  function tickGlobalTimer(){
+    globalSeconds = Math.max(0, globalSeconds - 1);
+    const m = String(Math.floor(globalSeconds/60)).padStart(2,'0');
+    const s = String(globalSeconds%60).padStart(2,'0');
+    urgencyTimerEl.textContent = `${m}:${s}`;
+  }
+  setInterval(tickGlobalTimer, 1000);
+
+  function goTo(index){
+    screens.forEach(s => s.classList.remove('active'));
+    screens.find(s => s.dataset.step == index).classList.add('active');
+    current = index;
+    window.scrollTo({top:0});
+    if(index === 1) decrementSpots();
+    if(index === 3) runLoader();
+    if(index === 4) runReveal();
+  }
+
+  // ---- Q1, Q2, Q3: tap auto-advance ----
+  document.querySelectorAll('.opt-list').forEach(list=>{
+    const q = list.dataset.question;
+    list.querySelectorAll('.opt').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        list.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+        btn.classList.add('selected');
+        answers[q] = btn.dataset.value;
+        setTimeout(()=>{
+          if(q === 'hasPanels') goTo(1);
+          if(q === 'systemAge') goTo(2);
+          if(q === 'isOwner') goTo(3);
+        }, 380);
+      });
+    });
+  });
+
+  // ---- loader: reservation % ticking 0->96 + checklist ----
+  function runLoader(){
+    const pctNumText = document.getElementById('pctNumText');
+    const pctFill = document.getElementById('pctFill');
+    const target = 96;
+    const checks = [document.getElementById('chk0'), document.getElementById('chk1'), document.getElementById('chk2')];
+    checks.forEach(c => c.classList.remove('done'));
+    pctNumText.textContent = '0';
+    pctFill.style.width = '0%';
+
+    let val = 0;
+    const totalMs = 2200;
+    const stepMs = 30;
+    const increment = target / (totalMs / stepMs);
+
+    const iv = setInterval(()=>{
+      val = Math.min(target, val + increment);
+      pctNumText.textContent = Math.round(val);
+      pctFill.style.width = (val/100*100) + '%';
+
+      if(val >= target*0.4 && !checks[0].classList.contains('done')) checks[0].classList.add('done');
+      if(val >= target*0.75 && !checks[1].classList.contains('done')) checks[1].classList.add('done');
+      if(val >= target - 0.5 && !checks[2].classList.contains('done')) checks[2].classList.add('done');
+
+      if(val >= target){
+        clearInterval(iv);
+        setTimeout(()=> goTo(4), 500);
+      }
+    }, stepMs);
+  }
+
+  // ---- reveal: separate short reservation countdown ----
+  let revealed = false;
+  function runReveal(){
+    if(revealed) return;
+    revealed = true;
+    decrementSpots();
+    fireConfetti();
+    startReservationCountdown(5*60);
+
+    const cta = document.getElementById('finalCta');
+    const dest = new URLSearchParams(clickParams);
+    dest.set('hasPanels', answers.hasPanels || '');
+    dest.set('systemAge', answers.systemAge || '');
+    dest.set('isOwner', answers.isOwner || '');
+    dest.set('amount', 30000);
+    // Base offer URL, RedTrack params are appended below.
+    // Kept as a real <a href>, not a JS redirect, so RedTrack registers the click normally.
+    cta.href = 'https://go.digitalrouteone.com/click?' + dest.toString();
+  }
+
+  function fireConfetti(){
+    const layer = document.getElementById('confettiLayer');
+    const colors = ['#FFC93C','#FF3B3F','#C4181C','#E0A800','#FFFFFF'];
+    for(let i=0;i<60;i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      const size = 6 + Math.random()*7;
+      piece.style.width = size + 'px';
+      piece.style.height = (size*0.4 + 4) + 'px';
+      piece.style.left = Math.random()*100 + 'vw';
+      piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+      piece.style.animationDuration = (2.4 + Math.random()*1.8) + 's';
+      piece.style.animationDelay = (Math.random()*0.6) + 's';
+      layer.appendChild(piece);
+      setTimeout(()=>piece.remove(), 5000);
+    }
+  }
+
+  function startReservationCountdown(seconds){
+    const el = document.getElementById('countdown');
+    let remaining = seconds;
+    function render(){
+      const m = String(Math.floor(remaining/60)).padStart(2,'0');
+      const s = String(remaining%60).padStart(2,'0');
+      el.textContent = `${m}:${s}`;
+    }
+    render();
+    const iv = setInterval(()=>{
+      remaining--;
+      if(remaining < 0){ clearInterval(iv); return; }
+      render();
+    }, 1000);
+  }
+})();
+</script>
+</body>
+</html>

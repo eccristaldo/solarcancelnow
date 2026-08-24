@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Solar Loophole Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1428;
+    --navy-alt:#101F3D;
+    --card:#122448;
+    --red:#E63946;
+    --red-deep:#B71C24;
+    --gold:#F2B705;
+    --gold-deep:#D89A00;
+    --ink:#F5F7FA;
+    --ink-70: rgba(245,247,250,0.72);
+    --ink-45: rgba(245,247,250,0.45);
+    --line: rgba(255,255,255,0.12);
+    --display:'Oswald','Inter',sans-serif;
+    --sans:'Inter',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--sans); color:var(--ink);
+    background:
+      radial-gradient(circle at 8% -6%, rgba(230,57,70,0.22), transparent 42%),
+      radial-gradient(circle at 100% 4%, rgba(242,183,5,0.12), transparent 40%),
+      radial-gradient(circle at 50% 100%, rgba(230,57,70,0.08), transparent 50%),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 2px, transparent 2px, transparent 64px),
+      var(--navy);
+    min-height:100vh; -webkit-font-smoothing:antialiased; overflow-x:hidden; position:relative;
+  }
+  .watermark{
+    position:fixed; top:-40px; left:50%; transform:translateX(-50%); font-size:340px; opacity:.035;
+    pointer-events:none; z-index:0; user-select:none; line-height:1;
+  }
+
+  /* ---------- progress ---------- */
+  .progress-shell{position:fixed; top:0; left:0; right:0; z-index:30; padding:14px 18px 0; display:none;}
+  .progress-shell.show{display:block;}
+  .progress-inner{max-width:520px; margin:0 auto;}
+  .progress-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;}
+  .kicker{font-family:var(--display); font-weight:600; font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold);}
+  .step-count{font-family:var(--sans); font-size:11px; color:var(--ink-45);}
+  .progress-track{height:4px; border-radius:4px; background:rgba(255,255,255,0.1); overflow:hidden;}
+  .progress-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--red-deep),var(--red)); box-shadow:0 0 10px rgba(230,57,70,0.6); border-radius:4px; transition:width .5s cubic-bezier(.4,0,.2,1);}
+
+  /* ---------- screen shell ---------- */
+  .screen{
+    display:none; min-height:100vh; min-height:100dvh; position:relative; z-index:1;
+    flex-direction:column; align-items:center; justify-content:center;
+    padding:88px 22px 60px; text-align:center;
+  }
+  .screen.active{display:flex; animation:screenIn .4s ease;}
+  @keyframes screenIn{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+  .wrap{max-width:480px; width:100%;}
+
+  /* ---------- ribbon ---------- */
+  .ribbon{
+    display:inline-flex; align-items:center; gap:8px; font-family:var(--display); font-weight:600; font-size:13px;
+    letter-spacing:.06em; text-transform:uppercase; color:#fff;
+    background:linear-gradient(180deg,var(--red),var(--red-deep));
+    padding:9px 20px; margin-bottom:22px;
+    clip-path:polygon(3% 0, 97% 0, 100% 50%, 97% 100%, 3% 100%, 0% 50%);
+    box-shadow:0 6px 16px -4px rgba(230,57,70,0.55);
+  }
+
+  h1{
+    font-family:var(--display); font-weight:700; font-size:32px; line-height:1.16; margin:0 0 14px; color:var(--ink);
+    text-transform:uppercase; letter-spacing:0.005em;
+  }
+  h1 .accent{color:var(--gold);}
+  .lede{font-size:15px; line-height:1.55; color:var(--ink-70); margin:0 0 28px; font-weight:500;}
+
+  .btn{
+    width:100%; border:none; cursor:pointer; text-decoration:none; box-sizing:border-box;
+    font-family:var(--display); font-weight:700; font-size:17px; color:#1A1300;
+    text-transform:uppercase; letter-spacing:.03em;
+    background:linear-gradient(180deg,var(--gold),var(--gold-deep));
+    padding:18px 20px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 0 0 1px rgba(242,183,5,0.3), 0 14px 30px -10px rgba(242,183,5,0.5);
+  }
+  .micro-trust{text-align:center; font-size:11.5px; font-weight:600; color:var(--ink-45); margin-top:12px;}
+
+  /* ---------- question ---------- */
+  .q-text{font-family:var(--display); font-weight:600; font-size:24px; line-height:1.3; margin:0 0 26px; color:var(--ink); text-transform:uppercase;}
+  .opt-list{display:flex; flex-direction:column; gap:12px;}
+  .opt{
+    display:flex; align-items:center; gap:14px; width:100%;
+    border:1.5px solid var(--line); background:var(--card); border-radius:12px;
+    padding:18px 18px; cursor:pointer; text-align:left; transition:all .15s;
+  }
+  .opt:hover{border-color:rgba(242,183,5,0.5);}
+  .opt .badge{
+    flex-shrink:0; width:32px; height:32px; border-radius:8px; border:1.5px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-family:var(--display); font-weight:600; font-size:14px;
+    color:var(--ink-70); transition:all .15s;
+  }
+  .opt .label{flex:1; font-family:var(--sans); font-weight:700; font-size:16px; color:var(--ink);}
+  .opt .check{font-size:16px; color:transparent; transition:color .15s;}
+  .opt.selected{border-color:var(--gold); background:rgba(242,183,5,0.1); box-shadow:0 0 0 1px rgba(242,183,5,0.3) inset;}
+  .opt.selected .badge{background:var(--gold); border-color:var(--gold); color:#1A1300;}
+  .opt.selected .check{color:var(--gold);}
+
+  /* ---------- loader ---------- */
+  .pct-num{font-family:var(--display); font-weight:700; font-size:52px; color:var(--gold); text-shadow:0 0 24px rgba(242,183,5,0.5); line-height:1;}
+  .pct-num .of{font-size:20px; color:var(--ink-45); font-weight:500;}
+  .pct-label{font-family:var(--sans); font-weight:700; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-45); margin-top:6px;}
+  .pct-track{height:6px; border-radius:6px; background:rgba(255,255,255,0.1); overflow:hidden; margin:18px 0 26px;}
+  .pct-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--red-deep),var(--gold)); box-shadow:0 0 10px rgba(242,183,5,0.5); transition:width .1s linear;}
+  .check-list{display:flex; flex-direction:column; gap:12px; text-align:left; max-width:300px; margin:0 auto;}
+  .check-row{display:flex; align-items:center; gap:11px; font-family:var(--sans); font-weight:600; font-size:14px; color:var(--ink-45); transition:color .25s;}
+  .check-row .dot{flex-shrink:0; width:22px; height:22px; border-radius:50%; border:1.5px solid var(--line); display:flex; align-items:center; justify-content:center; transition:all .25s;}
+  .check-row.done{color:var(--ink);}
+  .check-row.done .dot{background:var(--gold); border-color:var(--gold); animation:popCheck .35s ease;}
+  .check-row.done .dot::after{content:"✓"; color:#1A1300; font-size:12px; font-weight:800;}
+  @keyframes popCheck{0%{transform:scale(.6);} 60%{transform:scale(1.2);} 100%{transform:scale(1);}}
+
+  /* ---------- reveal ---------- */
+  .badge-burst{
+    display:inline-flex; align-items:center; gap:8px; font-family:var(--display); font-weight:600; font-size:13px;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--gold);
+    background:rgba(242,183,5,0.1); border:1px solid rgba(242,183,5,0.3); border-radius:999px;
+    padding:8px 16px; margin-bottom:18px;
+    animation:bounceIn .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes bounceIn{0%{opacity:0; transform:scale(.4);} 60%{opacity:1; transform:scale(1.08);} 100%{transform:scale(1);}}
+  .qualify-h{font-family:var(--display); font-weight:700; font-size:38px; color:var(--ink); margin:0 0 6px; text-transform:uppercase;}
+  .reveal-lede{font-size:14.5px; color:var(--ink-70); margin:0 0 14px; font-weight:500;}
+
+  .amount-shell{position:relative; margin:8px 0 18px; padding:20px 10px;}
+  .amount-label{font-family:var(--sans); font-weight:700; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:6px;}
+  .amount{
+    font-family:var(--display); font-weight:700; font-size:62px; color:var(--gold); letter-spacing:-0.01em; line-height:1;
+    text-shadow:0 0 32px rgba(242,183,5,0.55); animation:pulseGlow 1.8s ease-in-out infinite;
+  }
+  @keyframes pulseGlow{0%,100%{text-shadow:0 0 24px rgba(242,183,5,0.45);} 50%{text-shadow:0 0 44px rgba(242,183,5,0.85);}}
+  .sparkle{position:absolute; font-size:19px; animation:twinkle 1.6s ease-in-out infinite;}
+  .sp1{top:0; left:10%; animation-delay:.1s;} .sp2{top:8px; right:8%; animation-delay:.5s;}
+  .sp3{bottom:4px; left:16%; animation-delay:.9s;} .sp4{bottom:0; right:14%; animation-delay:1.3s;}
+  @keyframes twinkle{0%,100%{opacity:.3; transform:scale(.8);} 50%{opacity:1; transform:scale(1.15);}}
+
+  .urgency-line{font-family:var(--sans); font-weight:700; font-size:14px; color:var(--red); margin:6px 0 16px;}
+  .timer-shell{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    background:rgba(230,57,70,0.1); border:1px solid rgba(230,57,70,0.35);
+    border-radius:12px; padding:13px 16px; margin-bottom:24px;
+  }
+  .timer-label{font-family:var(--sans); font-weight:700; font-size:11.5px; color:var(--red);}
+  .timer-digits{font-family:var(--display); font-size:21px; font-weight:600; color:var(--ink); letter-spacing:.03em;}
+
+  .cta-glow{
+    width:100%; border:none; cursor:pointer; position:relative; overflow:hidden; text-decoration:none; box-sizing:border-box;
+    font-family:var(--display); font-weight:700; font-size:18px; color:#1A1300; text-transform:uppercase; letter-spacing:.03em;
+    background:linear-gradient(180deg,var(--gold),var(--gold-deep));
+    padding:19px 20px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 0 0 1px rgba(242,183,5,0.35), 0 14px 32px -8px rgba(242,183,5,0.55);
+    animation:ctaPulse 1.7s ease-in-out infinite;
+  }
+  @keyframes ctaPulse{0%,100%{box-shadow:0 0 0 1px rgba(242,183,5,0.35), 0 14px 32px -8px rgba(242,183,5,0.55);} 50%{box-shadow:0 0 0 1px rgba(242,183,5,0.5), 0 18px 42px -4px rgba(242,183,5,0.8);}}
+  .cta-glow::after{
+    content:""; position:absolute; top:0; left:-60%; width:40%; height:100%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+    transform:skewX(-20deg); animation:shine 2.4s ease-in-out infinite;
+  }
+  @keyframes shine{0%{left:-60%;} 45%{left:130%;} 100%{left:130%;}}
+
+  .trust-grid{display:flex; flex-direction:column; gap:10px; margin-top:22px; text-align:left;}
+  .trust-item{display:flex; align-items:flex-start; gap:10px; font-size:13px; font-weight:500; color:var(--ink-70);}
+  .trust-item .chk{flex-shrink:0; width:18px; height:18px; border-radius:50%; background:var(--gold); color:#1A1300; display:flex; align-items:center; justify-content:center; font-size:11px; margin-top:1px; font-weight:800;}
+
+  .fine-print{max-width:480px; margin:26px auto 0; font-size:10px; line-height:1.7; color:rgba(245,247,250,0.32); text-align:center;}
+
+  /* ---------- confetti ---------- */
+  .confetti-layer{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:60;}
+  .confetti-piece{position:absolute; top:-20px; border-radius:2px; opacity:0; animation:fall linear forwards;}
+  @keyframes fall{0%{opacity:1; transform:translateY(0) rotate(0deg);} 100%{opacity:.9; transform:translateY(110vh) rotate(600deg);}}
+
+  @media (max-width:400px){
+    h1{font-size:26px;}
+    .q-text{font-size:20px;}
+    .amount{font-size:50px;}
+    .qualify-h{font-size:30px;}
+    .pct-num{font-size:44px;}
+    .watermark{font-size:220px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="watermark">🏛️</div>
+
+<div class="progress-shell" id="progressShell">
+  <div class="progress-inner">
+    <div class="progress-top">
+      <span class="kicker" id="kicker">Question 1 of 3</span>
+      <span class="step-count">🚨 Solar Loophole Check</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+</div>
+
+<!-- SCREEN 0: HEADLINE + Q1 -->
+<section class="screen active" data-step="0">
+  <div class="wrap">
+    <div class="ribbon">🚨 Newly Discovered Loophole</div>
+    <h1>New Loophole Lets Solar Homeowners <span class="accent">Cancel</span> Their Contract And Claim Up To <span class="accent">$30,000</span></h1>
+    <p class="lede">Thousands are already using it. See if you qualify in 30 seconds.</p>
+    <p class="q-text">Do You Still Have Solar Panels On Your Roof?</p>
+    <div class="opt-list" data-question="hasPanels">
+      <button class="opt" data-value="Yes"><span class="badge">A</span><span class="label">Yes</span><span class="check">✓</span></button>
+      <button class="opt" data-value="No"><span class="badge">B</span><span class="label">No</span><span class="check">✓</span></button>
+    </div>
+    <div class="micro-trust">🔒 Free · No signup needed</div>
+  </div>
+</section>
+
+<!-- SCREEN 1: Q2 -->
+<section class="screen" data-step="1">
+  <div class="wrap">
+    <p class="q-text">How Long Have You Had Your Solar System?</p>
+    <div class="opt-list" data-question="systemAge">
+      <button class="opt" data-value="Less than 2 years"><span class="badge">A</span><span class="label">Less than 2 years</span><span class="check">✓</span></button>
+      <button class="opt" data-value="2+ years"><span class="badge">B</span><span class="label">2+ years</span><span class="check">✓</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- SCREEN 2: Q3 -->
+<section class="screen" data-step="2">
+  <div class="wrap">
+    <p class="q-text">Is The Home Yours?</p>
+    <div class="opt-list" data-question="isOwner">
+      <button class="opt" data-value="Yes"><span class="badge">A</span><span class="label">I own it</span><span class="check">✓</span></button>
+      <button class="opt" data-value="No"><span class="badge">B</span><span class="label">I rent</span><span class="check">✓</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- SCREEN 3: LOADER -->
+<section class="screen" data-step="3">
+  <div class="wrap">
+    <h1 style="font-size:20px;">Checking Loophole Eligibility…</h1>
+    <div class="pct-wrap">
+      <div class="pct-num"><span id="pctNumText">0</span><span class="of">%</span></div>
+      <div class="pct-label">Eligibility Match</div>
+      <div class="pct-track"><div class="pct-fill" id="pctFill"></div></div>
+    </div>
+    <div class="check-list">
+      <div class="check-row" id="chk0"><span class="dot"></span>Verifying homeowner status</div>
+      <div class="check-row" id="chk1"><span class="dot"></span>Checking your state's loophole rules</div>
+      <div class="check-row" id="chk2"><span class="dot"></span>Calculating your payout</div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREEN 4: REVEAL -->
+<section class="screen" data-step="4">
+  <div class="wrap">
+    <div class="badge-burst">🎉 You're Eligible</div>
+    <h1 class="qualify-h">You Qualify!</h1>
+    <p class="reveal-lede">This loophole may entitle you to</p>
+
+    <div class="amount-shell">
+      <span class="sparkle sp1">✨</span><span class="sparkle sp2">✨</span>
+      <span class="sparkle sp3">⭐</span><span class="sparkle sp4">✨</span>
+      <div class="amount-label">Total qualified amount</div>
+      <div class="amount">$30,000</div>
+    </div>
+
+    <p class="urgency-line">⏰ This loophole won't last. Claim before it closes.</p>
+    <div class="timer-shell">
+      <span class="timer-label">Offer expires in</span>
+      <span class="timer-digits" id="countdown">10:00</span>
+    </div>
+
+    <a class="cta-glow" id="finalCta" href="https://go.digitalrouteone.com/click">Claim My $30,000 <span>→</span></a>
+
+    <div class="trust-grid">
+      <div class="trust-item"><span class="chk">✓</span>No cost or obligation to claim</div>
+      <div class="trust-item"><span class="chk">✓</span>Just follow 3 easy steps on the next page</div>
+      <div class="trust-item"><span class="chk">✓</span>Thousands of homeowners already claimed theirs</div>
+    </div>
+
+    <p class="fine-print">Not a government program. Not affiliated with the U.S. Department of Energy or any state agency. Estimated amount is illustrative and based on figures reported by homeowners in similar situations. Actual eligibility and any recovered amount, if any, vary by contract, installer, and state, and are not guaranteed. This site connects you with independent, third-party solar review specialists and may receive compensation for doing so.</p>
+  </div>
+</section>
+
+<div class="confetti-layer" id="confettiLayer"></div>
+
+<script>
+(function(){
+  const screens = Array.from(document.querySelectorAll('.screen'));
+  const progressShell = document.getElementById('progressShell');
+  const progressFill = document.getElementById('progressFill');
+  const kicker = document.getElementById('kicker');
+  let current = 0;
+  let answers = { hasPanels:null, systemAge:null, isOwner:null };
+
+  const params = new URLSearchParams(window.location.search);
+  const clickParams = params.toString();
+  const TOTAL_Q = 3;
+
+  function goTo(index){
+    screens.forEach(s => s.classList.remove('active'));
+    screens.find(s => s.dataset.step == index).classList.add('active');
+    current = index;
+
+    if(index === 0 || index === 1 || index === 2){
+      progressShell.classList.add('show');
+      kicker.textContent = `Question ${index + 1} of ${TOTAL_Q}`;
+      progressFill.style.width = Math.round(((index + 1) / TOTAL_Q) * 100) + '%';
+    } else {
+      progressShell.classList.remove('show');
+    }
+
+    window.scrollTo({top:0});
+    if(index === 3) runLoader();
+    if(index === 4) runReveal();
+  }
+
+  // ---- Q1, Q2, Q3: tap auto-advance ----
+  document.querySelectorAll('.opt-list').forEach(list=>{
+    const q = list.dataset.question;
+    list.querySelectorAll('.opt').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        list.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+        btn.classList.add('selected');
+        answers[q] = btn.dataset.value;
+        setTimeout(()=>{
+          if(q === 'hasPanels') goTo(1);
+          if(q === 'systemAge') goTo(2);
+          if(q === 'isOwner') goTo(3);
+        }, 380);
+      });
+    });
+  });
+
+  // ---- loader: eligibility % ticking 0->92 + checklist ----
+  function runLoader(){
+    const pctNumText = document.getElementById('pctNumText');
+    const pctFill = document.getElementById('pctFill');
+    const target = 92;
+    const checks = [document.getElementById('chk0'), document.getElementById('chk1'), document.getElementById('chk2')];
+    checks.forEach(c => c.classList.remove('done'));
+    pctNumText.textContent = '0';
+    pctFill.style.width = '0%';
+
+    let val = 0;
+    const totalMs = 2200;
+    const stepMs = 30;
+    const increment = target / (totalMs / stepMs);
+
+    const iv = setInterval(()=>{
+      val = Math.min(target, val + increment);
+      pctNumText.textContent = Math.round(val);
+      pctFill.style.width = (val/100*100) + '%';
+
+      if(val >= target*0.4 && !checks[0].classList.contains('done')) checks[0].classList.add('done');
+      if(val >= target*0.75 && !checks[1].classList.contains('done')) checks[1].classList.add('done');
+      if(val >= target - 0.5 && !checks[2].classList.contains('done')) checks[2].classList.add('done');
+
+      if(val >= target){
+        clearInterval(iv);
+        setTimeout(()=> goTo(4), 500);
+      }
+    }, stepMs);
+  }
+
+  // ---- reveal ----
+  let revealed = false;
+  function runReveal(){
+    if(revealed) return;
+    revealed = true;
+    fireConfetti();
+    startCountdown(10*60);
+
+    const cta = document.getElementById('finalCta');
+    const dest = new URLSearchParams(clickParams);
+    dest.set('hasPanels', answers.hasPanels || '');
+    dest.set('systemAge', answers.systemAge || '');
+    dest.set('isOwner', answers.isOwner || '');
+    dest.set('amount', 30000);
+    // Base offer URL, RedTrack params are appended below.
+    // Kept as a real <a href>, not a JS redirect, so RedTrack registers the click normally.
+    cta.href = 'https://go.digitalrouteone.com/click?' + dest.toString();
+  }
+
+  function fireConfetti(){
+    const layer = document.getElementById('confettiLayer');
+    const colors = ['#F2B705','#E63946','#B71C24','#D89A00','#FFFFFF'];
+    for(let i=0;i<60;i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      const size = 6 + Math.random()*7;
+      piece.style.width = size + 'px';
+      piece.style.height = (size*0.4 + 4) + 'px';
+      piece.style.left = Math.random()*100 + 'vw';
+      piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+      piece.style.animationDuration = (2.4 + Math.random()*1.8) + 's';
+      piece.style.animationDelay = (Math.random()*0.6) + 's';
+      layer.appendChild(piece);
+      setTimeout(()=>piece.remove(), 5000);
+    }
+  }
+
+  function startCountdown(seconds){
+    const el = document.getElementById('countdown');
+    let remaining = seconds;
+    function render(){
+      const m = String(Math.floor(remaining/60)).padStart(2,'0');
+      const s = String(remaining%60).padStart(2,'0');
+      el.textContent = `${m}:${s}`;
+    }
+    render();
+    const iv = setInterval(()=>{
+      remaining--;
+      if(remaining < 0){ clearInterval(iv); return; }
+      render();
+    }, 1000);
+  }
+})();
+</script>
+</body>
+</html>
