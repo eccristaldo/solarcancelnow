@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Solar Contract Eligibility Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1E33;
+    --paper:#F5F1E8;
+    --amber:#D4A537;
+    --amber-dark:#B8891F;
+    --red:#C23B3B;
+    --green:#2E7D5B;
+    --white:#FFFFFF;
+    --line: rgba(11,30,51,0.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0; height:100%;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1.45;
+    overflow-x:hidden;
+    padding:16px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  .page{
+    width:100%;
+    max-width:440px;
+    max-height:100%;
+    display:flex;
+    flex-direction:column;
+    background:var(--white);
+    border-radius:18px;
+    box-shadow:0 20px 50px rgba(11,30,51,0.14);
+    overflow:hidden;
+    position:relative;
+  }
+
+  .progress-track{
+    height:6px;
+    background:var(--line);
+    width:100%;
+    flex-shrink:0;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--amber);
+    width:35%;
+    transition:width 0.4s ease;
+  }
+
+  .content{
+    display:flex;
+    flex-direction:column;
+    padding:clamp(20px,5vw,28px) clamp(20px,5vw,26px);
+    overflow-y:auto;
+  }
+
+  .step{display:none; flex-direction:column;}
+  .step.active{display:flex; animation:fadeIn 0.3s ease;}
+  @keyframes fadeIn{
+    from{opacity:0; transform:translateY(6px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  /* question steps */
+  .q-label{
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--amber-dark);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin-bottom:8px;
+    flex-shrink:0;
+  }
+  h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(19px,5.5vw,23px);
+    font-weight:600;
+    line-height:1.28;
+    margin:0 0 clamp(16px,4vh,24px);
+    color:var(--ink);
+    flex-shrink:0;
+  }
+  .options-wrap{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .option{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    width:100%;
+    background:var(--paper);
+    border:2px solid transparent;
+    border-radius:12px;
+    padding:18px 18px;
+    font-size:16px;
+    font-weight:600;
+    color:var(--ink);
+    cursor:pointer;
+    transition:border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+    font-family:'Inter',sans-serif;
+    text-align:left;
+  }
+  .option:hover{border-color:var(--amber);}
+  .option:active{transform:scale(0.98);}
+  .option .arrow{
+    color:rgba(11,30,51,0.3);
+    font-size:18px;
+    flex-shrink:0;
+    margin-left:10px;
+  }
+  .spacer{flex:1;}
+
+  .footnote{
+    text-align:center;
+    font-size:12px;
+    color:rgba(11,30,51,0.45);
+    margin-top:14px;
+    flex-shrink:0;
+  }
+
+  /* loading step */
+  .loading-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:60px 0;
+  }
+  .spinner{
+    width:44px;
+    height:44px;
+    border:4px solid var(--line);
+    border-top-color:var(--amber);
+    border-radius:50%;
+    margin:0 auto 20px;
+    animation:spin 0.9s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loading-text{
+    font-size:15px;
+    font-weight:600;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  .loading-sub{
+    font-size:13px;
+    color:rgba(11,30,51,0.55);
+  }
+
+  /* result step */
+  .result-step{justify-content:flex-start;}
+  .result-badge{
+    width:52px;
+    height:52px;
+    background:rgba(46,125,91,0.12);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 14px;
+    font-size:26px;
+    flex-shrink:0;
+  }
+  h2.result-headline{
+    text-align:center;
+    font-size:clamp(20px,6vw,25px);
+    margin-bottom:6px;
+    flex-shrink:0;
+  }
+  p.result-sub{
+    text-align:center;
+    font-size:14px;
+    color:rgba(11,30,51,0.68);
+    margin:0 0 18px;
+    flex-shrink:0;
+  }
+  .urgency-box{
+    background:#FBF0F0;
+    border:1px solid rgba(194,59,59,0.25);
+    border-radius:12px;
+    padding:14px 16px;
+    margin-top:22px;
+    margin-bottom:16px;
+    flex-shrink:0;
+  }
+  .urgency-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:8px;
+  }
+  .urgency-label{
+    font-size:12px;
+    font-weight:700;
+    color:var(--red);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+  }
+  .timer{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:18px;
+    font-weight:700;
+    color:var(--red);
+    font-variant-numeric:tabular-nums;
+  }
+  .spots-bar-track{
+    height:6px;
+    background:rgba(194,59,59,0.15);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .spots-bar-fill{
+    height:100%;
+    background:var(--red);
+    border-radius:999px;
+    width:82%;
+  }
+  .spots-text{
+    font-size:11.5px;
+    color:rgba(11,30,51,0.6);
+    margin-top:6px;
+  }
+  .cta-btn{
+    display:block;
+    width:100%;
+    background:var(--green);
+    color:var(--white);
+    border:none;
+    border-radius:12px;
+    padding:17px;
+    font-size:16.5px;
+    font-weight:700;
+    font-family:'Inter',sans-serif;
+    text-align:center;
+    text-decoration:none;
+    cursor:pointer;
+    margin-bottom:10px;
+    transition:transform 0.15s ease, background 0.15s ease;
+    flex-shrink:0;
+  }
+  .cta-btn:hover{background:#256a4d;}
+  .cta-btn:active{transform:scale(0.98);}
+  .live-ticker{
+    text-align:center;
+    font-size:12px;
+    color:rgba(11,30,51,0.5);
+    flex-shrink:0;
+  }
+  .live-dot{
+    display:inline-block;
+    width:7px;
+    height:7px;
+    background:var(--green);
+    border-radius:50%;
+    margin-right:5px;
+    animation:pulse 1.6s ease infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1;}
+    50%{opacity:0.35;}
+  }
+  .trust-row{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-top:16px;
+    font-size:11px;
+    color:rgba(11,30,51,0.45);
+    flex-shrink:0;
+  }
+
+  /* confetti */
+  #confetti-canvas{
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    pointer-events:none;
+    z-index:999;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="page">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="content">
+
+    <!-- Step 1: Question 1 -->
+    <div class="step active" data-step="1">
+      <div class="q-label">Question 1 of 2</div>
+      <h2>Do you live in the United States?</h2>
+      <div class="options-wrap">
+        <button class="option" onclick="answer(1,'yes')">Yes <span class="arrow">→</span></button>
+        <button class="option" onclick="answer(1,'no')">No <span class="arrow">→</span></button>
+      </div>
+      <div class="footnote">Takes less than 30 seconds. No cost to check.</div>
+    </div>
+
+    <!-- Step 2: Question 2 -->
+    <div class="step" data-step="2">
+      <div class="q-label">Question 2 of 2</div>
+      <h2>Do you currently have solar panels on your home?</h2>
+      <div class="options-wrap">
+        <button class="option" onclick="answer(2,'yes')">Yes <span class="arrow">→</span></button>
+        <button class="option" onclick="answer(2,'no')">No <span class="arrow">→</span></button>
+      </div>
+      <div class="footnote">Takes less than 30 seconds. No cost to check.</div>
+    </div>
+
+    <!-- Step 3: Loading -->
+    <div class="step" data-step="3">
+      <div class="loading-wrap">
+        <div class="spinner"></div>
+        <div class="loading-text">Checking your eligibility...</div>
+        <div class="loading-sub">Matching your answers against current program criteria</div>
+      </div>
+    </div>
+
+    <!-- Step 4: Result -->
+    <div class="step result-step" data-step="4">
+      <div class="result-badge">✅</div>
+      <h2 class="result-headline">You may qualify for up to $90,000</h2>
+      <p class="result-sub">Based on your answers, you may be eligible for contract cancellation and compensation.</p>
+
+      <div class="urgency-box">
+        <div class="urgency-top">
+          <span class="urgency-label">Spots reviewed today</span>
+          <span class="timer" id="countdown">05:00</span>
+        </div>
+        <div class="spots-bar-track"><div class="spots-bar-fill"></div></div>
+        <div class="spots-text">Today's review capacity is almost full — claim your spot before it closes.</div>
+      </div>
+
+      <a class="cta-btn" href="https://go.digitalrouteone.com/click">Claim My Spot Now</a>
+      <div class="live-ticker"><span class="live-dot"></span>27 people checked their eligibility in the last hour</div>
+
+      <div class="trust-row">
+        <span>🔒 Secure</span>
+        <span>No cost to check</span>
+        <span>No obligation</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function goToStep(n){
+    document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+    document.querySelector('.step[data-step="'+n+'"]').classList.add('active');
+    var progressMap = {1:35, 2:65, 3:85, 4:100};
+    document.getElementById('progressFill').style.width = progressMap[n] + '%';
+  }
+
+  function answer(step, value){
+    if(step === 1){
+      goToStep(2);
+    } else if(step === 2){
+      goToStep(3);
+      setTimeout(function(){
+        goToStep(4);
+        startCountdown();
+        launchConfetti();
+      }, 1500);
+    }
+  }
+
+  function startCountdown(){
+    var timeLeft = 300; // 5:00 in seconds
+    var el = document.getElementById('countdown');
+    var interval = setInterval(function(){
+      timeLeft--;
+      if(timeLeft <= 0){
+        clearInterval(interval);
+        timeLeft = 0;
+      }
+      var m = Math.floor(timeLeft/60);
+      var s = timeLeft % 60;
+      el.textContent = (m<10?'0':'')+m + ':' + (s<10?'0':'')+s;
+    }, 1000);
+  }
+
+  /* Lightweight confetti burst, no external libraries */
+  function launchConfetti(){
+    var canvas = document.getElementById('confetti-canvas');
+    var ctx = canvas.getContext('2d');
+    function resize(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var colors = ['#D4A537','#2E7D5B','#0B1E33','#C23B3B','#F5F1E8'];
+    var pieces = [];
+    var count = 120;
+    for(var i=0;i<count;i++){
+      pieces.push({
+        x: Math.random()*canvas.width,
+        y: -20 - Math.random()*canvas.height*0.5,
+        w: 6 + Math.random()*6,
+        h: 8 + Math.random()*8,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        speedY: 2 + Math.random()*3,
+        speedX: -1.5 + Math.random()*3,
+        rotation: Math.random()*360,
+        rotationSpeed: -6 + Math.random()*12
+      });
+    }
+
+    var start = Date.now();
+    var duration = 3200;
+
+    function frame(){
+      var elapsed = Date.now() - start;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      pieces.forEach(function(p){
+        p.y += p.speedY;
+        p.x += p.speedX;
+        p.rotation += p.rotationSpeed;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation * Math.PI/180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+      });
+      if(elapsed < duration){
+        requestAnimationFrame(frame);
+      } else {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+</script>
+
+</body>
+</html>
