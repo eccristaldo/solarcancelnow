@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Solar Relief Check | 02</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#2D7DD2;
+    --blue-deep:#1B5FA6;
+    --blue-tint:#EAF3FB;
+    --orange:#F5A623;
+    --orange-deep:#E08E0B;
+    --orange-tint:#FEF3E0;
+    --bg:#FFFFFF;
+    --card:#FFFFFF;
+    --ink:#1A2B3C;
+    --ink-70: rgba(26,43,60,0.72);
+    --ink-45: rgba(26,43,60,0.45);
+    --line:#E2E8ED;
+    --shadow: 0 20px 48px -20px rgba(45,125,210,0.28);
+    --radius:18px;
+    --display:'Poppins','Inter',sans-serif;
+    --sans:'Inter',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--sans); color:var(--ink);
+    background:
+      radial-gradient(circle at 12% -8%, rgba(45,125,210,0.08), transparent 42%),
+      radial-gradient(circle at 100% 6%, rgba(245,166,35,0.08), transparent 42%),
+      var(--bg);
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{width:100%; padding:16px 16px 0;}
+  .topbar-inner{max-width:520px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;}
+  .brandmark{display:flex; align-items:center; gap:7px; font-family:var(--display); font-weight:700; font-size:14.5px; color:var(--blue-deep);}
+  .brandmark .sun{width:22px; height:22px; border-radius:50%; background:linear-gradient(160deg,var(--orange),var(--orange-deep)); display:flex; align-items:center; justify-content:center; font-size:12px;}
+  .step-count{font-family:var(--sans); font-weight:600; font-size:12px; color:var(--ink-45);}
+
+  .stage{width:100%; max-width:520px; padding:22px 16px 60px; flex:1;}
+
+  /* ---------- hero (headline, only on step 0) ---------- */
+  .hero{padding:8px 2px 22px; text-align:center;}
+  .hero-eyebrow{font-family:var(--sans); font-weight:600; font-size:14.5px; color:var(--ink-45); margin-bottom:10px;}
+  h1{
+    font-family:var(--display); font-weight:700; font-size:29px; line-height:1.24; color:var(--ink);
+    margin:0 0 12px; letter-spacing:-0.01em;
+  }
+  h1 .accent{color:var(--orange);}
+  .lede{font-size:14.5px; line-height:1.5; color:var(--ink-70); margin:0;}
+  .bridge{font-size:14.5px; line-height:1.45; font-weight:800; color:var(--blue-deep); margin:12px 0 0;}
+  .loading-spinner{width:36px;height:36px;margin:0 auto 16px;border:4px solid var(--blue-tint);border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- card ---------- */
+  .card{
+    background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    border:1px solid rgba(45,125,210,0.12);
+    padding:26px 24px 22px; position:relative; overflow:hidden;
+  }
+  .micro-trust{text-align:center; font-size:11.5px; font-weight:600; color:var(--ink-45); margin-top:14px;}
+  .q-text{font-family:var(--display); font-weight:600; font-size:17.5px; line-height:1.4; margin:0 0 18px; color:var(--ink);}
+  .q-text .star{color:var(--orange);}
+
+  .radio-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:2px;}
+  .radio-opt{
+    display:flex; align-items:center; gap:10px; border:1.5px solid var(--line); border-radius:12px;
+    padding:15px 14px; cursor:pointer; transition:all .15s; background:#fff;
+  }
+  .radio-opt:hover{border-color:var(--blue);}
+  .radio-opt .dot{
+    flex-shrink:0; width:19px; height:19px; border-radius:50%; border:2px solid #C7D2DB;
+    display:flex; align-items:center; justify-content:center; transition:all .15s;
+  }
+  .radio-opt .dot::after{content:""; width:9px; height:9px; border-radius:50%; background:var(--blue); opacity:0; transform:scale(.4); transition:all .15s;}
+  .radio-opt .label{font-family:var(--sans); font-weight:600; font-size:14.5px; color:var(--ink);}
+  .radio-opt.selected{border-color:var(--blue); background:var(--blue-tint);}
+  .radio-opt.selected .dot{border-color:var(--blue);}
+  .radio-opt.selected .dot::after{opacity:1; transform:scale(1);}
+
+
+
+  /* ---------- loader ---------- */
+  .loader-wrap{padding:12px 4px 4px; text-align:center;}
+  .score-num{font-family:var(--display); font-weight:800; font-size:52px; color:var(--blue-deep); line-height:1;}
+  .score-num .of{font-size:19px; color:var(--ink-45); font-weight:600;}
+  .score-label{font-family:var(--sans); font-weight:700; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-45); margin-top:6px;}
+  .score-track{height:8px; border-radius:8px; background:var(--line); overflow:hidden; margin:18px 0 24px;}
+  .score-fill{height:100%; width:0%; border-radius:8px; background:linear-gradient(90deg,var(--blue),var(--orange)); transition:width .1s linear;}
+  .check-list{display:flex; flex-direction:column; gap:12px; text-align:left; max-width:290px; margin:0 auto;}
+  .check-row{display:flex; align-items:center; gap:11px; font-family:var(--sans); font-weight:600; font-size:14px; color:var(--ink-45); transition:color .25s;}
+  .check-row .dot2{flex-shrink:0; width:22px; height:22px; border-radius:50%; border:2px solid var(--line); display:flex; align-items:center; justify-content:center; transition:all .25s;}
+  .check-row.done{color:var(--ink);}
+  .check-row.done .dot2{background:var(--blue); border-color:var(--blue); animation:popCheck .35s ease;}
+  .check-row.done .dot2::after{content:"✓"; color:#fff; font-size:12px; font-weight:800;}
+  @keyframes popCheck{0%{transform:scale(.6);} 60%{transform:scale(1.2);} 100%{transform:scale(1);}}
+
+  /* ---------- reveal ---------- */
+  .badge-burst{
+    display:inline-flex; align-items:center; gap:7px; font-family:var(--display); font-weight:700; font-size:13px;
+    color:var(--blue-deep); background:var(--blue-tint); border:1px solid rgba(45,125,210,0.22);
+    border-radius:999px; padding:7px 15px; margin-bottom:14px;
+    animation:bounceIn .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes bounceIn{0%{opacity:0; transform:scale(.4);} 60%{opacity:1; transform:scale(1.08);} 100%{transform:scale(1);}}
+  .qualify-h{font-family:var(--display); font-weight:800; font-size:26px; color:var(--ink); margin:0 0 4px; text-align:center;}
+  .reveal-lede{font-size:14px; color:var(--ink-70); margin:0 0 6px; text-align:center;}
+  .amount-shell{text-align:center; position:relative; margin:10px 0 6px; padding:20px 8px; background:radial-gradient(circle, rgba(245,166,35,0.14), transparent 70%); border-radius:22px;}
+  .amount-label{font-family:var(--sans); font-weight:700; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--orange-deep); margin-bottom:4px;}
+  .amount{font-family:var(--display); font-weight:800; font-size:52px; color:var(--ink); letter-spacing:-0.02em; line-height:1; text-shadow:0 0 22px rgba(245,166,35,0.4); animation:pulseGlow 1.8s ease-in-out infinite;}
+  @keyframes pulseGlow{0%,100%{text-shadow:0 0 18px rgba(245,166,35,0.35);} 50%{text-shadow:0 0 34px rgba(245,166,35,0.7);}}
+  .sparkle{position:absolute; font-size:18px; animation:twinkle 1.6s ease-in-out infinite;}
+  .sp1{top:4px; left:12%; animation-delay:.1s;} .sp2{top:12px; right:10%; animation-delay:.5s;}
+  .sp3{bottom:8px; left:18%; animation-delay:.9s;} .sp4{bottom:4px; right:16%; animation-delay:1.3s;}
+  @keyframes twinkle{0%,100%{opacity:.3; transform:scale(.8);} 50%{opacity:1; transform:scale(1.15);}}
+  .urgency-line{text-align:center; font-family:var(--sans); font-weight:700; font-size:13.5px; color:#D64545; margin:10px 0 4px;}
+  .timer-shell{display:flex; align-items:center; justify-content:center; gap:9px; background:var(--orange-tint); border-radius:13px; padding:12px 15px; margin:10px 0 22px;}
+  .timer-label{font-family:var(--sans); font-weight:700; font-size:11.5px; color:var(--orange-deep);}
+  .timer-digits{font-family:var(--display); font-size:19px; font-weight:700; color:var(--ink);}
+  .cta-glow{
+    width:100%; border:none; cursor:pointer; position:relative; overflow:hidden; text-decoration:none; box-sizing:border-box;
+    font-family:var(--display); font-weight:700; font-size:17px; color:#fff;
+    background:linear-gradient(180deg,var(--orange),var(--orange-deep));
+    padding:17px 20px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 14px 28px -10px rgba(224,142,11,0.55);
+    animation:ctaPulse 1.7s ease-in-out infinite;
+  }
+  @keyframes ctaPulse{0%,100%{box-shadow:0 14px 28px -10px rgba(224,142,11,0.55);} 50%{box-shadow:0 16px 36px -6px rgba(224,142,11,0.8);}}
+  .cta-glow::after{content:""; position:absolute; top:0; left:-60%; width:40%; height:100%; background:linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent); transform:skewX(-20deg); animation:shine 2.4s ease-in-out infinite;}
+  @keyframes shine{0%{left:-60%;} 45%{left:130%;} 100%{left:130%;}}
+  .trust-grid{display:flex; flex-direction:column; gap:9px; margin-top:20px;}
+  .trust-item{display:flex; align-items:flex-start; gap:10px; font-size:13px; font-weight:500; color:var(--ink-70);}
+  .trust-item .chk{flex-shrink:0; width:18px; height:18px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; margin-top:1px;}
+
+  .fine-print{max-width:480px; margin:22px auto 0; padding:0 8px; font-size:10.5px; line-height:1.6; color:var(--ink-45); text-align:center;}
+
+  /* ---------- confetti ---------- */
+  .confetti-layer{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:60;}
+  .confetti-piece{position:absolute; top:-20px; border-radius:2px; opacity:0; animation:fall linear forwards;}
+  @keyframes fall{0%{opacity:1; transform:translateY(0) rotate(0deg);} 100%{opacity:.9; transform:translateY(110vh) rotate(600deg);}}
+
+  .screen{display:none;}
+  .screen.active{display:block; animation:screenIn .35s ease;}
+  @keyframes screenIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  @media (max-width:400px){
+    h1{font-size:24px;}
+    .amount{font-size:42px;}
+    .score-num{font-size:44px;}
+    .radio-grid{gap:9px;}
+    .radio-opt{padding:13px 10px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brandmark"><span class="sun">☀</span>Solar Relief Check</div>
+    <div class="step-count" id="stepCount"></div>
+  </div>
+</div>
+
+<div class="stage">
+
+  <!-- SCREEN 0: HEADLINE + Q1 -->
+  <section class="screen active" data-step="0">
+    <div class="hero">
+      <div class="hero-eyebrow">Solar Relief Window Closing Tomorrow Night</div>
+      <h1>Solar Homeowners: <span class="accent">Check the List</span> Before Tomorrow Night</h1>
+      <p class="lede">A solar relief program may help eligible homeowners cancel a bad contract and claim compensation. The window closes tomorrow night.</p><p class="bridge">Find out if your name is on the list now.</p>
+    </div>
+    <div class="card">
+      <p class="q-text">Do you currently have a solar contract? <span class="star">*</span></p>
+      <div class="radio-grid" data-question="solarContract">
+        <div class="radio-opt" data-value="Yes"><span class="dot"></span><span class="label">Yes</span></div>
+        <div class="radio-opt" data-value="No"><span class="dot"></span><span class="label">No</span></div>
+      </div>
+      
+    </div>
+    <div class="micro-trust">3 quick questions · Takes under 30 seconds</div>
+  </section>
+
+  <!-- SCREEN 1: Q2 -->
+  <section class="screen" data-step="1">
+    <div class="card">
+      <p class="q-text">How long have you had your solar contract? <span class="star">*</span></p>
+      <div class="radio-grid" data-question="systemAge">
+        <div class="radio-opt" data-value="Less than 2 years"><span class="dot"></span><span class="label">Less than 2 years</span></div>
+        <div class="radio-opt" data-value="2+ years"><span class="dot"></span><span class="label">2+ years</span></div>
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- SCREEN 2: Q3 -->
+  <section class="screen" data-step="2">
+    <div class="card">
+      <p class="q-text">Is the home yours? <span class="star">*</span></p>
+      <div class="radio-grid" data-question="isOwner">
+        <div class="radio-opt" data-value="Yes"><span class="dot"></span><span class="label">I own it</span></div>
+        <div class="radio-opt" data-value="No"><span class="dot"></span><span class="label">I rent</span></div>
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- SCREEN 3: TRANSITION -->
+  <section class="screen" data-step="3">
+    <div class="card" style="text-align:center; padding:36px 24px;">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <h2 class="q-text" style="margin:0;">Reviewing your answers…</h2>
+    </div>
+  </section>
+
+  <!-- SCREEN 4: NEXT STEP -->
+  <section class="screen" data-step="4">
+    <div class="card" style="text-align:center;">
+      <div class="badge-burst">✓ 3 questions complete</div>
+      <h1 class="qualify-h">See What Solar Relief Options Are Available</h1>
+      <p class="reveal-lede">Your answers are ready. Continue to check your options for canceling a bad solar contract and claiming possible compensation.</p>
+      <p class="urgency-line">⏰ The advertised relief window ends tomorrow night.</p>
+      <a class="cta-glow" id="finalCta" href="https://go.digitalpresencenow.com/cf/click/1">See If I'm On The List <span>→</span></a>
+      <div class="trust-grid" style="text-align:left;">
+        <div class="trust-item"><span class="chk">✓</span>Review available options for your solar contract</div>
+        <div class="trust-item"><span class="chk">✓</span>Eligibility and any compensation depend on your situation</div>
+      </div>
+    </div>
+    <p class="fine-print">Not a government program or affiliated with the U.S. Department of Energy or any state agency. Completing this quiz does not determine eligibility or guarantee contract cancellation or compensation. Actual options depend on your contract, installer and state. This site connects you with independent third-party solar review specialists and may receive compensation for doing so.</p>
+  </section>
+
+</div>
+
+
+
+<script>
+(function(){
+  const screens = Array.from(document.querySelectorAll('.screen'));
+  const stepCount = document.getElementById('stepCount');
+  const answers = {solarContract:null, systemAge:null, isOwner:null};
+  const initialParams = new URLSearchParams(window.location.search);
+  let advancing = false;
+
+  function goTo(index){
+    screens.forEach(screen => screen.classList.remove('active'));
+    const next = screens.find(screen => Number(screen.dataset.step) === index);
+    next.classList.add('active');
+    stepCount.textContent = index < 3 ? `Question ${index + 1} of 3` : '';
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(index === 3) setTimeout(() => goTo(4), 950);
+    if(index === 4) setDestination();
+  }
+
+  const stepMap = {solarContract:1, systemAge:2, isOwner:3};
+  document.querySelectorAll('.radio-grid').forEach(grid => {
+    const question = grid.dataset.question;
+    grid.querySelectorAll('.radio-opt').forEach(option => {
+      option.setAttribute('role', 'button');
+      option.setAttribute('tabindex', '0');
+      const choose = () => {
+        if(advancing) return;
+        advancing = true;
+        grid.querySelectorAll('.radio-opt').forEach(item => item.classList.remove('selected'));
+        option.classList.add('selected');
+        answers[question] = option.dataset.value;
+        setTimeout(() => {advancing = false; goTo(stepMap[question]);}, 280);
+      };
+      option.addEventListener('click', choose);
+      option.addEventListener('keydown', event => {
+        if(event.key === 'Enter' || event.key === ' '){event.preventDefault(); choose();}
+      });
+    });
+  });
+
+  function setDestination(){
+    const params = new URLSearchParams(initialParams);
+    Object.entries(answers).forEach(([key, value]) => params.set(key, value || ''));
+    const suffix = params.toString();
+    document.getElementById('finalCta').href =
+      'https://go.digitalpresencenow.com/cf/click/1' + (suffix ? '?' + suffix : '');
+  }
+
+  goTo(0);
+})();
+</script>
+</body>
+</html>
+
